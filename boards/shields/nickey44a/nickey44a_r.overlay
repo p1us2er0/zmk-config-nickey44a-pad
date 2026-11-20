@@ -159,8 +159,28 @@
      * Physical right swipe is negative after the orientation correction.
      * Finger right -> back, left -> forward, as on a MacBook. On layer 1,
      * finger right -> left tab, left -> right tab, as on the left pad.
+     *
+     * macOS ignores the Browser Back/Forward keys, so the Mac profile sends
+     * Cmd+[ and Cmd+], which go back and forward in Safari, Chrome and
+     * Finder. The Windows profiles use tps43_touch_swipe_win instead.
      */
     tps43_touch_swipe: tps43_touch_swipe {
+        compatible = "zmk,input-processor-touch-swipe";
+        #input-processor-cells = <0>;
+        hwheel-code = <INPUT_REL_HWHEEL>;
+        wheel-code = <INPUT_REL_WHEEL>;
+        touch-code = <INPUT_BTN_TOUCH>;
+        threshold = <8>;
+        axis-ratio = <2>;
+        left-keycode = <LG(LBKT)>;
+        right-keycode = <LG(RBKT)>;
+        override-layer = <1>;
+        override-left-keycode = <LC(LS(TAB))>;
+        override-right-keycode = <LC(TAB)>;
+    };
+
+    /* tps43_touch_swipe for Windows, where Browser Back/Forward work. */
+    tps43_touch_swipe_win: tps43_touch_swipe_win {
         compatible = "zmk,input-processor-touch-swipe";
         #input-processor-cells = <0>;
         hwheel-code = <INPUT_REL_HWHEEL>;
@@ -188,19 +208,33 @@
         cancel-scroll-inertia-on-ctrl;
     };
 
+/*
+ * Enter AUTO_MOUSE (layer 8 in config/nickey44a.keymap) for 800 ms, as on
+ * tomkey, then orient the pad and recognize swipes.
+ */
+#define RIGHT_PAD_PROCESSORS(swipe)                                                \
+    <&zip_temp_layer 8 800>, <&tps43_orientation RIGHT_PAD_ORIENTATION>,          \
+    <&tps43_scroll_direction INPUT_TRANSFORM_Y_INVERT>, <swipe>,                  \
+    <&tps43_touch_inertia>
+
     tps43_listener: tps43_listener {
         compatible = "zmk,input-listener";
         device = <&tps43>;
-        /* Enter AUTO_MOUSE (layer 8 in config/nickey44a.keymap) for 800 ms, as on tomkey. */
-        input-processors = <&zip_temp_layer 8 800>,
-                           <&tps43_orientation RIGHT_PAD_ORIENTATION>,
-                           <&tps43_scroll_direction INPUT_TRANSFORM_Y_INVERT>,
-                           <&tps43_touch_swipe>, <&tps43_touch_inertia>;
+        input-processors = RIGHT_PAD_PROCESSORS(&tps43_touch_swipe);
 
         snipe_layer {
             layers = <1>;
             process-next;
             input-processors = <&zip_xy_scaler 2 3>;
+        };
+
+        /*
+         * WIN and WIN_JIS (layers 2 and 4 in config/nickey44a.keymap). Without
+         * process-next, this chain runs instead of the one above.
+         */
+        windows_layers {
+            layers = <2 4>;
+            input-processors = RIGHT_PAD_PROCESSORS(&tps43_touch_swipe_win);
         };
     };
 };

@@ -60,6 +60,12 @@ FWだけをビルドして書き込む。左手側のFWと`nickey44a_l.overlay`�
 ブラウザにフォーカスがある状態で使用する。1回のタッチにつき
 最大1回切り替え、再度切り替えるには指を離してからスワイプする。
 
+右手の戻る／進むは、Macでは`Cmd+[`／`Cmd+]`を送信する（Safari、Chrome、
+Finderの戻る／進む。macOSはBrowser Back／Forwardのキーを無視する）。
+WIN・WIN_JISのレイヤー（2と4）が有効な間は、Browser Back／Forwardを送信する。
+右のinput-listenerの`windows_layers`が、`tps43_touch_swipe`の代わりに
+`tps43_touch_swipe_win`を使う。
+
 右手もLayer 1が有効な間は左右スワイプをタブ移動に切り替える。向きは
 指を左へで右のタブ（中身が指について動く向き）。スワイプ成立時の
 レイヤー状態で送信キーを選ぶ。1回のタッチでの発火状態はレイヤーを
@@ -70,7 +76,7 @@ FWだけをビルドして書き込む。左手側のFWと`nickey44a_l.overlay`�
 ```text
 左TPS43 → 左input-splitの標準processors → BLE split (reg=0)
         → 右input-split proxy (reg=0) → 左専用input-listenerのorientation/tab swipe/横スクロール → 共通HID
-右TPS43 → 右input-listener → temp layer/orientation/scroll方向/swipe/inertia/Snipe → 共通HID
+右TPS43 → 右input-listener → Snipe → temp layer/orientation/scroll方向/swipe（Mac用かWindows用）/inertia → 共通HID
 ```
 
 左のprocessor順序は次の通り。1〜4はBLE転送前（左手側のFW）、5〜7は
