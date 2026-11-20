@@ -104,8 +104,10 @@
     tps43_listener: tps43_listener {
         compatible = "zmk,input-listener";
         device = <&tps43>;
+        /* Enter AUTO_MOUSE (layer 8 in config/nickey44a.keymap) for 800 ms, as on tomkey. */
         /* Correct the measured controller output: left -> down, down -> left. */
-        input-processors = <&tps43_orientation (INPUT_TRANSFORM_XY_SWAP |
+        input-processors = <&zip_temp_layer 8 800>,
+                           <&tps43_orientation (INPUT_TRANSFORM_XY_SWAP |
                                              INPUT_TRANSFORM_X_INVERT |
                                              INPUT_TRANSFORM_Y_INVERT)>,
                            <&tps43_touch_swipe>, <&tps43_touch_inertia>;
