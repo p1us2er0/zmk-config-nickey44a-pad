@@ -1,0 +1,22 @@
+# keymap-drawer settings, also used by .github/workflows/draw.yml.
+# Legends for the custom behaviors, which are otherwise drawn as raw bindings.
+parse_config:
+  raw_binding_map:
+    "&td_comma_left_parenthesis": {t: ",", s: "2x ("}
+    "&td_dot_right_parenthesis": {t: ".", s: "2x )"}
+    "&td_comma_left_parenthesis_jis": {t: ",", s: "2x ("}
+    "&td_dot_right_parenthesis_jis": {t: ".", s: "2x )"}
+    "&single_quote_jis": {t: "'", s: "\""}
+    "&mkp LCLK": LCLK
+    "&mkp RCLK": RCLK
+    "&td_bt_mac_0": {t: BT0 Mac, s: "2x kbd only"}
+    "&td_bt_mac_1": {t: BT1 Mac, s: "2x kbd only"}
+    "&td_bt_mac_2": {t: BT2 Mac, s: "2x kbd only"}
+    "&td_bt_win_3": {t: BT3 Win, s: "2x kbd only"}
+    "&td_bt_win_jis_4": {t: BT4 Win JIS, s: "2x kbd only"}
+    "&mac_us": Mac
+    "&win_us": Win
+    "&win_jis": Win JIS
+    "&bootloader": Boot
+    "&sys_reset": Reset
+    "&studio_unlock": Studio unlock

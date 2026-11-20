@@ -1,7 +1,7 @@
 layout: {zmk_keyboard: nickey44a}
 layers:
-  default:
-  - TAB
+  MAC:
+  - LEFT ALT
   - Q
   - W
   - E
@@ -12,8 +12,8 @@ layers:
   - I
   - O
   - P
-  - ''''
-  - LCTRL
+  - Ctl+SPACE
+  - LEFT CONTROL
   - A
   - S
   - D
@@ -23,30 +23,120 @@ layers:
   - J
   - K
   - L
-  - ;
-  - '-'
-  - LSHFT
-  - Z
+  - F2
+  - ''''
+  - LEFT GUI
+  - {t: Z, h: LEFT SHIFT}
   - X
   - C
   - V
   - B
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - {t: ;, h: FUNCTION}
+  - {t: '-', h: RIGHT SHIFT}
   - N
   - M
-  - ','
-  - .
-  - /
-  - '='
-  - '2'
-  - '1'
+  - {t: ',', s: 2x (}
+  - {t: ., s: 2x )}
+  - F7
+  - DELETE
+  - {t: LANG2, h: NUM}
   - SPACE
-  - BSPC
-  - RET
-  - RALT
-  '1':
-  - ESCAPE
+  - {t: LANG1, h: MOUSE}
+  - BACKSPACE
+  - ENTER
+  - ''
+  MOUSE_SLOW:
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  WIN:
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - LEFT WIN
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - LEFT CONTROL
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  NUM:
+  - {t: ▽, type: trans}
   - '1'
   - '2'
   - '3'
@@ -57,113 +147,192 @@ layers:
   - '8'
   - '9'
   - '0'
-  - '`'
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - '!'
+  - '@'
+  - '#'
+  - $
+  - '%'
+  - ^
+  - '&'
+  - '{'
+  - '}'
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - /
+  - \
+  - '|'
+  - '~'
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - '?'
+  - '*'
+  - '['
+  - ']'
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {type: held}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  WIN_JIS:
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
   - LEFT WIN
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: '''', s: '"'}
+  - LEFT CONTROL
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ;, h: FUNCTION, s: ''''}
+  - {t: '-', h: LEFT SHIFT, s: Sft+INT1}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ',', s: 2x (}
+  - {t: ., s: 2x )}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: LANG2, h: NUM_JIS}
+  - {t: ▽, type: trans}
+  - {t: LANG1, h: MOUSE}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  NUM_JIS:
+  - {t: ▽, type: trans}
+  - '1'
+  - '2'
+  - '3'
+  - '4'
+  - '5'
+  - '6'
+  - '7'
+  - '8'
+  - '9'
+  - '0'
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - Sft+1
+  - '['
+  - Sft+3
+  - Sft+4
+  - Sft+5
+  - '='
+  - Sft+6
+  - Sft+]
+  - Sft+#
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - /
+  - INT1
+  - Sft+INT3
+  - Sft+=
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - Sft+/
+  - Sft+'
+  - ']'
+  - '#'
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {type: held}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  FUNCTION:
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - Reset
+  - Boot
+  - {t: BT0 Mac, s: 2x kbd only}
+  - {t: BT1 Mac, s: 2x kbd only}
+  - {t: BT2 Mac, s: 2x kbd only}
+  - {t: BT3 Win, s: 2x kbd only}
+  - {t: BT4 Win JIS, s: 2x kbd only}
+  - Boot
+  - {t: ▽, type: trans}
   - F1
   - F2
   - F3
   - F4
   - F5
-  - LEFT
-  - DOWN
-  - UP
-  - RIGHT
-  - {t: ▽, type: trans}
-  - '~'
-  - {t: ▽, type: trans}
   - F6
   - F7
   - F8
   - F9
   - F10
+  - Reset
+  - Studio unlock
+  - F11
+  - F12
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - '['
-  - (
-  - )
-  - ']'
-  - \
-  - {t: ▽, type: trans}
-  - '3'
-  - {type: held}
-  - {t: ▽, type: trans}
-  - DELETE
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  '2':
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - '?'
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - '%'
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - '@'
-  - '#'
-  - $
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - '!'
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - '*'
-  - ^
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - '&'
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - Gui+Sft+S
   - {type: held}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  '3':
+  - Mac
+  - Win
+  - Win JIS
   - BT CLR
-  - {t: BT, h: '0'}
-  - {t: BT, h: '1'}
-  - {t: BT, h: '2'}
-  - {t: BT, h: '3'}
-  - {t: BT, h: '4'}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - Gui+Sft+4
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  MOUSE:
+  - {t: ▽, type: trans}
+  - HOME
+  - Gui+UP ARROW
+  - UP ARROW
+  - Gui+DOWN
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - Sft+Ctl+TAB
+  - Ctl+TAB
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - BT CLR ALL
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - '&studio_unlock'
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - END
+  - LEFT ARROW
+  - DOWN ARROW
+  - RIGHT ARROW
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -172,11 +341,104 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
+  - LEFT SHIFT
+  - ''
+  - Ctl+LEFT ARROW
+  - Ctl+RIGHT ARROW
+  - ''
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {type: held}
-  - {type: held}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - MOUSE_SLOW
+  - {t: LCLK, type: held}
+  - RCLK
+  - LCLK
+  - {t: ▽, type: trans}
+  AUTO_MOUSE:
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - MOUSE_SLOW
+  - LCLK
+  - RCLK
+  - LCLK
+  - {t: ▽, type: trans}
+combos:
+- p: [1, 2]
+  k: ESC
+- p: [14, 15]
+  k: TAB
+- p: [13, 14]
+  k: Sft+TAB
+- p: [15, 16]
+  k: Gui+/
+  l: [MAC, WIN, NUM]
+- p: [19, 20]
+  k: '`'
+  l: [MAC, WIN, NUM]
+- p: [18, 19]
+  k: '='
+  l: [MAC, WIN, NUM]
+- p: [15, 16]
+  k: Ctl+/
+  l: [WIN_JIS, NUM_JIS]
+- p: [19, 20]
+  k: Sft+[
+  l: [WIN_JIS, NUM_JIS]
+- p: [18, 19]
+  k: {t: Sft+-, s: Sft+;}
+  l: [WIN_JIS, NUM_JIS]
+- p: [25, 26]
+  k: Gui+LEFT ARROW
+  l: [MAC]
+- p: [26, 27]
+  k: Gui+RIGHT ARROW
+  l: [MAC]
+- p: [25, 26]
+  k: Alt+LEFT ARROW
+  l: [WIN, WIN_JIS]
+- p: [26, 27]
+  k: Alt+RIGHT ARROW
+  l: [WIN, WIN_JIS]
