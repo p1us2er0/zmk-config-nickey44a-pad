@@ -13,6 +13,47 @@
  *   NRST = XIAO P0.19
  */
 
+/*
+ * Trackpad mounting, one setting per side. After changing it, rebuild and
+ * flash the right half only: both pads are oriented here, on the central,
+ * and the left half's firmware is the same for either mounting. The
+ * gestures and their directions (see docs/dual-tps43.md) stay the same.
+ *
+ *   PAD_NOTCH_RIGHT  The notch of the TPS43 to the right, as in the build
+ *                    guide. Uses the author's measured correction (e3004b7).
+ *   PAD_NOTCH_LEFT   Turned 180 degrees from PAD_NOTCH_RIGHT, so the flat
+ *                    cable is not twisted. Both axes are reversed.
+ */
+#define PAD_NOTCH_RIGHT 0
+#define PAD_NOTCH_LEFT 1
+#define RIGHT_PAD_MOUNT PAD_NOTCH_LEFT
+#define LEFT_PAD_MOUNT PAD_NOTCH_LEFT
+
+/*
+ * Right pad, applied to the cursor and to both scroll axes. The author
+ * measured the controller output for PAD_NOTCH_RIGHT as left -> down and
+ * down -> left. PAD_NOTCH_LEFT drops both inverts to turn that by 180 degrees.
+ */
+#if RIGHT_PAD_MOUNT == PAD_NOTCH_RIGHT
+#define RIGHT_PAD_ORIENTATION \
+    (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)
+#else
+#define RIGHT_PAD_ORIENTATION (INPUT_TRANSFORM_XY_SWAP)
+#endif
+
+/*
+ * Left pad, as it arrives from the left half: REL_DIAL is the two-finger
+ * left/right movement, REL_HWHEEL the two-finger up/down movement. This turns
+ * them into right = positive and down = positive. The author measured that a
+ * right swipe produces negative DIAL with PAD_NOTCH_RIGHT, so that mounting
+ * inverts both; PAD_NOTCH_LEFT already has these signs.
+ */
+#if LEFT_PAD_MOUNT == PAD_NOTCH_RIGHT
+#define LEFT_PAD_ORIENTATION (INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)
+#else
+#define LEFT_PAD_ORIENTATION 0
+#endif
+
 &uicr {
     nfct-pins-as-gpios;
 };
@@ -45,23 +86,51 @@
         };
     };
 
+    /*
+     * Left pad: two-finger left/right scrolls horizontally, two-finger
+     * up/down switches tabs.
+     */
     left_tps43_listener: left_tps43_listener {
         compatible = "zmk,input-listener";
         device = <&left_tps43_split>;
-        input-processors = <&left_tps43_tab_swipe>;
+        input-processors = <&left_tps43_orientation LEFT_PAD_ORIENTATION>,
+                           <&left_tps43_tab_swipe>, <&left_tps43_hscroll>;
     };
 
+    left_tps43_orientation: left_tps43_orientation {
+        compatible = "zmk,input-processor-transform";
+        #input-processor-cells = <1>;
+        type = <INPUT_EV_REL>;
+        x-codes = <INPUT_REL_DIAL>;
+        y-codes = <INPUT_REL_HWHEEL>;
+    };
+
+    /*
+     * Swipes on the up/down axis (HWHEEL), whose output it suppresses.
+     * Finger up (negative) -> right tab, finger down -> left tab, like
+     * scrolling down a list.
+     */
     left_tps43_tab_swipe: left_tps43_tab_swipe {
         compatible = "zmk,input-processor-touch-swipe";
         #input-processor-cells = <0>;
-        hwheel-code = <INPUT_REL_DIAL>;
-        wheel-code = <INPUT_REL_HWHEEL>;
+        hwheel-code = <INPUT_REL_HWHEEL>;
+        wheel-code = <INPUT_REL_DIAL>;
         touch-code = <INPUT_BTN_TOUCH>;
         threshold = <8>;
         axis-ratio = <2>;
-        /* Measured left pad: physical right swipe produces negative DIAL. */
         left-keycode = <LC(TAB)>;
         right-keycode = <LC(LS(TAB))>;
+    };
+
+    /*
+     * Left/right becomes horizontal scrolling. Finger right is positive, so
+     * the content follows the finger on hosts with natural scrolling on.
+     */
+    left_tps43_hscroll: left_tps43_hscroll {
+        compatible = "zmk,input-processor-code-mapper";
+        #input-processor-cells = <0>;
+        type = <INPUT_EV_REL>;
+        map = <INPUT_REL_DIAL INPUT_REL_HWHEEL>;
     };
 
     tps43_orientation: tps43_orientation {
@@ -72,6 +141,25 @@
         y-codes = <INPUT_REL_Y INPUT_REL_WHEEL>;
     };
 
+    /*
+     * After the orientation, finger down is positive WHEEL, as for the
+     * cursor. Invert it so that finger up scrolls up, which hosts with
+     * natural scrolling on (Mac, and the Windows mouse setting reversed)
+     * turn into the content following the finger, as on a MacBook.
+     */
+    tps43_scroll_direction: tps43_scroll_direction {
+        compatible = "zmk,input-processor-transform";
+        #input-processor-cells = <1>;
+        type = <INPUT_EV_REL>;
+        x-codes = <INPUT_REL_HWHEEL>;
+        y-codes = <INPUT_REL_WHEEL>;
+    };
+
+    /*
+     * Physical right swipe is negative after the orientation correction.
+     * Finger right -> back, left -> forward, as on a MacBook. On layer 1,
+     * finger right -> left tab, left -> right tab, as on the left pad.
+     */
     tps43_touch_swipe: tps43_touch_swipe {
         compatible = "zmk,input-processor-touch-swipe";
         #input-processor-cells = <0>;
@@ -83,9 +171,8 @@
         left-keycode = <C_AC_BACK>;
         right-keycode = <C_AC_FORWARD>;
         override-layer = <1>;
-        /* Physical right swipe is negative after orientation correction. */
-        override-left-keycode = <LC(TAB)>;
-        override-right-keycode = <LC(LS(TAB))>;
+        override-left-keycode = <LC(LS(TAB))>;
+        override-right-keycode = <LC(TAB)>;
     };
 
     tps43_touch_inertia: tps43_touch_inertia {
@@ -105,11 +192,9 @@
         compatible = "zmk,input-listener";
         device = <&tps43>;
         /* Enter AUTO_MOUSE (layer 8 in config/nickey44a.keymap) for 800 ms, as on tomkey. */
-        /* Correct the measured controller output: left -> down, down -> left. */
         input-processors = <&zip_temp_layer 8 800>,
-                           <&tps43_orientation (INPUT_TRANSFORM_XY_SWAP |
-                                             INPUT_TRANSFORM_X_INVERT |
-                                             INPUT_TRANSFORM_Y_INVERT)>,
+                           <&tps43_orientation RIGHT_PAD_ORIENTATION>,
+                           <&tps43_scroll_direction INPUT_TRANSFORM_Y_INVERT>,
                            <&tps43_touch_swipe>, <&tps43_touch_inertia>;
 
         snipe_layer {
