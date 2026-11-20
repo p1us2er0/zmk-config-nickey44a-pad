@@ -12,7 +12,7 @@ layers:
   - I
   - O
   - P
-  - Ctl+SPACE
+  - {t: '-', h: RIGHT SHIFT}
   - LEFT CONTROL
   - A
   - S
@@ -31,8 +31,8 @@ layers:
   - C
   - V
   - B
-  - {t: ;, h: FUNCTION}
-  - {t: '-', h: RIGHT SHIFT}
+  - ''
+  - ''
   - N
   - M
   - {t: ',', s: 2x (}
@@ -44,7 +44,7 @@ layers:
   - {t: LANG1, h: MOUSE}
   - BACKSPACE
   - ENTER
-  - ''
+  - {t: ;, h: FUNCTION}
   MOUSE_SLOW:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -76,8 +76,8 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - ''
+  - ''
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -121,8 +121,8 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - ''
+  - ''
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -166,8 +166,8 @@ layers:
   - \
   - '|'
   - '~'
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - ''
+  - ''
   - '?'
   - '*'
   - '['
@@ -192,7 +192,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - {t: '-', h: LEFT SHIFT, s: Sft+INT1}
   - LEFT WIN
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -211,8 +211,8 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: ;, h: FUNCTION, s: ''''}
-  - {t: '-', h: LEFT SHIFT, s: Sft+INT1}
+  - ''
+  - ''
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ',', s: 2x (}
@@ -224,7 +224,7 @@ layers:
   - {t: LANG1, h: MOUSE}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - {t: ;, h: FUNCTION, s: ''''}
   NUM_JIS:
   - {t: ▽, type: trans}
   - '1'
@@ -256,8 +256,8 @@ layers:
   - INT1
   - Sft+INT3
   - Sft+=
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - ''
+  - ''
   - Sft+/
   - Sft+'
   - ']'
@@ -301,8 +301,8 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - Gui+Sft+S
-  - {type: held}
-  - {t: ▽, type: trans}
+  - ''
+  - ''
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - Mac
@@ -314,7 +314,7 @@ layers:
   - Gui+Sft+4
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - {type: held}
   MOUSE:
   - {t: ▽, type: trans}
   - HOME
@@ -346,8 +346,8 @@ layers:
   - Ctl+LEFT ARROW
   - Ctl+RIGHT ARROW
   - ''
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - ''
+  - ''
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -391,8 +391,8 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - ''
+  - ''
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -412,6 +412,8 @@ combos:
   k: TAB
 - p: [13, 14]
   k: Sft+TAB
+- p: [16, 17]
+  k: Ctl+SPACE
 - p: [15, 16]
   k: Gui+/
   l: [MAC, WIN, NUM]
