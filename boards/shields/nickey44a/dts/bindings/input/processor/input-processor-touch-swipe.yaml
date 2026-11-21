@@ -53,3 +53,18 @@ properties:
     type: int
     default: 0
     description: Encoded keycode for a positive swipe when a second override layer is active.
+  second-override-hold-keycode:
+    type: int
+    default: 0
+    description: |
+      Encoded keycode pressed by a swipe while a second override layer is
+      active and held until the finger lifts, such as LEFT_GUI for an app
+      switcher. While it is held, each further repeat threshold of travel in
+      the same touch sends the second override keycode for its direction.
+      0 keeps one swipe per touch.
+  second-override-repeat-threshold:
+    type: int
+    default: 0
+    description: |
+      Horizontal travel per extra key while second-override-hold-keycode is
+      held. 0 uses threshold.

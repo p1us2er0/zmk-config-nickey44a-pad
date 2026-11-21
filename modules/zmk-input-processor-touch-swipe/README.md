@@ -12,6 +12,14 @@ of the listed layer IDs is active. They are checked at the same moment, after
 `override-layer`, which wins when both are active. Leaving
 `second-override-layers` out disables this feature.
 
+Optional `second-override-hold-keycode` turns the second override into an app
+switcher: the swipe presses that key (for example `LEFT_GUI`) and keeps it
+pressed until the finger lifts, and each further
+`second-override-repeat-threshold` of travel in the same touch (default:
+`threshold`) sends the second override keycode for its direction again, such
+as Tab and Shift+Tab. A reset at the next touch also releases the key, in case
+a touch release is lost.
+
 Local MIT-licensed processor, ordered after orientation and before touch-inertia.
 One instance must serve one input listener. The normal Zephyr input thread
 serializes callbacks; there is no delayed work or shared gesture state.

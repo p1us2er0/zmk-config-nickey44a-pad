@@ -30,6 +30,8 @@ struct touch_swipe_config {
     size_t second_override_layers_len;
     uint32_t second_override_left_keycode;
     uint32_t second_override_right_keycode;
+    uint32_t second_override_hold_keycode;
+    int32_t second_override_repeat_threshold;
 };
 
 struct touch_swipe_data {
@@ -39,6 +41,8 @@ struct touch_swipe_data {
     int32_t vertical_accum;
     /* Total vertical travel prevents opposite scroll samples cancelling out. */
     int32_t vertical_travel;
+    /* Key held from a second override swipe until the finger lifts, or 0. */
+    uint32_t holding;
 };
 
 static int64_t magnitude(int32_t value) {
@@ -58,7 +62,28 @@ static bool any_layer_active(const int32_t *layers, size_t len) {
     return false;
 }
 
+static void tap(uint32_t keycode) {
+    int64_t timestamp = k_uptime_get();
+    int press = raise_zmk_keycode_state_changed_from_encoded(keycode, true, timestamp);
+    int release = raise_zmk_keycode_state_changed_from_encoded(keycode, false, timestamp);
+    if (press < 0 || release < 0) {
+        LOG_WRN("touch swipe key output failed: %d/%d", press, release);
+    }
+}
+
+static void release_hold(struct touch_swipe_data *data) {
+    if (data->holding) {
+        int ret = raise_zmk_keycode_state_changed_from_encoded(data->holding, false, k_uptime_get());
+        if (ret < 0) {
+            LOG_WRN("touch swipe hold release failed: %d", ret);
+        }
+        data->holding = 0;
+    }
+}
+
+/* Every reset releases a held key, so a lost touch release ends at the next touch. */
 static void reset(struct touch_swipe_data *data) {
+    release_hold(data);
     *data = (struct touch_swipe_data){0};
 }
 
@@ -96,7 +121,19 @@ static int observe_input(const struct device *dev, struct input_event *event,
         return ZMK_INPUT_PROC_CONTINUE;
     }
 
-    if (data->touching && !data->swipe_fired) {
+    if (data->touching && data->holding) {
+        /*
+         * Hold mode (an app switcher): one more key per repeat threshold of
+         * travel, either way, while the finger stays down.
+         */
+        data->horizontal_accum = bounded_add(data->horizontal_accum, event->value);
+        if (magnitude(data->horizontal_accum) >= cfg->second_override_repeat_threshold) {
+            bool left = data->horizontal_accum < 0;
+            data->horizontal_accum = 0;
+            tap(left ? cfg->second_override_left_keycode : cfg->second_override_right_keycode);
+            LOG_DBG("touch swipe hold %s repeated", left ? "left" : "right");
+        }
+    } else if (data->touching && !data->swipe_fired) {
         data->horizontal_accum = bounded_add(data->horizontal_accum, event->value);
         int64_t horizontal = magnitude(data->horizontal_accum);
         if (horizontal >= cfg->threshold &&
@@ -111,13 +148,19 @@ static int observe_input(const struct device *dev, struct input_event *event,
                                         cfg->second_override_layers_len)) {
                 keycode = left ? cfg->second_override_left_keycode
                                : cfg->second_override_right_keycode;
+                if (cfg->second_override_hold_keycode) {
+                    /* Held until the finger lifts (reset), whatever the layers do. */
+                    int ret = raise_zmk_keycode_state_changed_from_encoded(
+                        cfg->second_override_hold_keycode, true, k_uptime_get());
+                    if (ret < 0) {
+                        LOG_WRN("touch swipe hold press failed: %d", ret);
+                    } else {
+                        data->holding = cfg->second_override_hold_keycode;
+                        data->horizontal_accum = 0;
+                    }
+                }
             }
-            int64_t timestamp = k_uptime_get();
-            int press = raise_zmk_keycode_state_changed_from_encoded(keycode, true, timestamp);
-            int release = raise_zmk_keycode_state_changed_from_encoded(keycode, false, timestamp);
-            if (press < 0 || release < 0) {
-                LOG_WRN("touch swipe key output failed: %d/%d", press, release);
-            }
+            tap(keycode);
             LOG_DBG("touch swipe %s fired", left ? "left" : "right");
         }
     }
@@ -172,6 +215,11 @@ static const struct zmk_input_processor_driver_api api = {.handle_event = observ
         .second_override_layers_len = DT_INST_PROP_LEN_OR(n, second_override_layers, 0),           \
         .second_override_left_keycode = DT_INST_PROP(n, second_override_left_keycode),           \
         .second_override_right_keycode = DT_INST_PROP(n, second_override_right_keycode),         \
+        .second_override_hold_keycode = DT_INST_PROP(n, second_override_hold_keycode),             \
+        .second_override_repeat_threshold =                                                        \
+            DT_INST_PROP(n, second_override_repeat_threshold) > 0                                  \
+                ? DT_INST_PROP(n, second_override_repeat_threshold)                                \
+                : DT_INST_PROP(n, threshold),                                                      \
     };                                                                                            \
     DEVICE_DT_INST_DEFINE(n, NULL, NULL, &data_##n, &config_##n, POST_KERNEL,                       \
                           CONFIG_KERNEL_INIT_PRIORITY_DEFAULT, &api);
