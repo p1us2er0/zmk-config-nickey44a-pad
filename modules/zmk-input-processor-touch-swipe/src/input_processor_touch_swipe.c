@@ -26,6 +26,10 @@ struct touch_swipe_config {
     int32_t override_layer;
     uint32_t override_left_keycode;
     uint32_t override_right_keycode;
+    const int32_t *second_override_layers;
+    size_t second_override_layers_len;
+    uint32_t second_override_left_keycode;
+    uint32_t second_override_right_keycode;
 };
 
 struct touch_swipe_data {
@@ -43,6 +47,15 @@ static int64_t magnitude(int32_t value) {
 
 static int32_t bounded_add(int32_t accum, int64_t delta) {
     return CLAMP((int64_t)accum + delta, (int64_t)INT32_MIN, (int64_t)INT32_MAX);
+}
+
+static bool any_layer_active(const int32_t *layers, size_t len) {
+    for (size_t i = 0; i < len; i++) {
+        if (zmk_keymap_layer_active(layers[i])) {
+            return true;
+        }
+    }
+    return false;
 }
 
 static void reset(struct touch_swipe_data *data) {
@@ -94,6 +107,10 @@ static int observe_input(const struct device *dev, struct input_event *event,
             uint32_t keycode = left ? cfg->left_keycode : cfg->right_keycode;
             if (cfg->override_layer >= 0 && zmk_keymap_layer_active(cfg->override_layer)) {
                 keycode = left ? cfg->override_left_keycode : cfg->override_right_keycode;
+            } else if (any_layer_active(cfg->second_override_layers,
+                                        cfg->second_override_layers_len)) {
+                keycode = left ? cfg->second_override_left_keycode
+                               : cfg->second_override_right_keycode;
             }
             int64_t timestamp = k_uptime_get();
             int press = raise_zmk_keycode_state_changed_from_encoded(keycode, true, timestamp);
@@ -110,7 +127,23 @@ static int observe_input(const struct device *dev, struct input_event *event,
 
 static const struct zmk_input_processor_driver_api api = {.handle_event = observe_input};
 
+#define SECOND_LAYER_ASSERT(node_id, prop, idx)                                                    \
+    BUILD_ASSERT(DT_PROP_BY_IDX(node_id, prop, idx) >= 0 &&                                        \
+                     DT_PROP_BY_IDX(node_id, prop, idx) < ZMK_KEYMAP_LAYERS_LEN,                   \
+                 "invalid second override layer");
+
+#define SECOND_LAYERS(n)                                                                           \
+    COND_CODE_1(DT_INST_NODE_HAS_PROP(n, second_override_layers),                                  \
+                (DT_INST_FOREACH_PROP_ELEM(n, second_override_layers, SECOND_LAYER_ASSERT)         \
+                 BUILD_ASSERT(DT_INST_PROP(n, second_override_left_keycode) &&                     \
+                                  DT_INST_PROP(n, second_override_right_keycode),                  \
+                              "second override layers require both keycodes");                     \
+                 static const int32_t second_layers_##n[] =                                        \
+                     DT_INST_PROP(n, second_override_layers);),                                    \
+                ())
+
 #define CREATE_INSTANCE(n)                                                                         \
+    SECOND_LAYERS(n)                                                                               \
     BUILD_ASSERT(DT_INST_PROP(n, override_layer) >= -1 &&                                        \
                  DT_INST_PROP(n, override_layer) < ZMK_KEYMAP_LAYERS_LEN, "invalid override layer"); \
     BUILD_ASSERT(DT_INST_PROP(n, override_layer) < 0 ||                                          \
@@ -134,6 +167,11 @@ static const struct zmk_input_processor_driver_api api = {.handle_event = observ
         .override_layer = DT_INST_PROP(n, override_layer),                                       \
         .override_left_keycode = DT_INST_PROP(n, override_left_keycode),                         \
         .override_right_keycode = DT_INST_PROP(n, override_right_keycode),                       \
+        .second_override_layers = COND_CODE_1(DT_INST_NODE_HAS_PROP(n, second_override_layers),    \
+                                              (second_layers_##n), (NULL)),                        \
+        .second_override_layers_len = DT_INST_PROP_LEN_OR(n, second_override_layers, 0),           \
+        .second_override_left_keycode = DT_INST_PROP(n, second_override_left_keycode),           \
+        .second_override_right_keycode = DT_INST_PROP(n, second_override_right_keycode),         \
     };                                                                                            \
     DEVICE_DT_INST_DEFINE(n, NULL, NULL, &data_##n, &config_##n, POST_KERNEL,                       \
                           CONFIG_KERNEL_INIT_PRIORITY_DEFAULT, &api);

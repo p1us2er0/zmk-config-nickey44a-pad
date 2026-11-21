@@ -6,6 +6,12 @@ The layer is checked when the swipe threshold is reached. The same touch state
 is retained across layer changes, so changing layers cannot retrigger a swipe
 until the finger is lifted. The default `override-layer = -1` disables this feature.
 
+Optional `second-override-layers`, `second-override-left-keycode`, and
+`second-override-right-keycode` select a second set of keycodes while any one
+of the listed layer IDs is active. They are checked at the same moment, after
+`override-layer`, which wins when both are active. Leaving
+`second-override-layers` out disables this feature.
+
 Local MIT-licensed processor, ordered after orientation and before touch-inertia.
 One instance must serve one input listener. The normal Zephyr input thread
 serializes callbacks; there is no delayed work or shared gesture state.

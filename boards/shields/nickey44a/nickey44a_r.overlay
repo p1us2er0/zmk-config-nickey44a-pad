@@ -162,6 +162,9 @@
      * Physical right swipe is negative after the orientation correction.
      * Finger right -> back, left -> forward, as on a MacBook. On layer 1,
      * finger right -> left tab, left -> right tab, as on the left pad.
+     * While NUM is held (LANG2 on the left thumb; layer 3, or NUM_JIS 5 on
+     * WIN_JIS), finger right -> the virtual desktop on the left, left -> the
+     * one on the right, as with a three-finger swipe on a MacBook.
      *
      * macOS ignores the Browser Back/Forward keys, so the Mac profile sends
      * Cmd+[ and Cmd+], which go back and forward in Safari, Chrome and
@@ -180,6 +183,10 @@
         override-layer = <1>;
         override-left-keycode = <LC(LS(TAB))>;
         override-right-keycode = <LC(TAB)>;
+        /* Ctrl+Left/Right moves between Spaces on macOS. */
+        second-override-layers = <3>;
+        second-override-left-keycode = <LC(LEFT_ARROW)>;
+        second-override-right-keycode = <LC(RIGHT_ARROW)>;
     };
 
     /* tps43_touch_swipe for Windows, where Browser Back/Forward work. */
@@ -196,6 +203,10 @@
         override-layer = <1>;
         override-left-keycode = <LC(LS(TAB))>;
         override-right-keycode = <LC(TAB)>;
+        /* Win+Ctrl+Left/Right moves between virtual desktops on Windows. */
+        second-override-layers = <3 5>;
+        second-override-left-keycode = <LG(LC(LEFT_ARROW))>;
+        second-override-right-keycode = <LG(LC(RIGHT_ARROW))>;
     };
 
     tps43_touch_inertia: tps43_touch_inertia {

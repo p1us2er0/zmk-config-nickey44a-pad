@@ -19,6 +19,8 @@
  * keys is the same. Layer 1 must stay MOUSE_SLOW: nickey44a_r.overlay slows
  * the right trackpad and turns its two-finger left/right swipes into tab
  * switching while layer 1 is active, and enters AUTO_MOUSE (8) on touch.
+ * NUM (3) and NUM_JIS (5) must keep their numbers too: while either is
+ * active, the same swipes switch virtual desktops.
  */
 
 #include <behaviors.dtsi>

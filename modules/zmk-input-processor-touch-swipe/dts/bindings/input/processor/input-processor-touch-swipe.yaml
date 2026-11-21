@@ -39,3 +39,16 @@ properties:
     type: int
     default: 0
     description: Encoded keycode for a positive swipe when override-layer is active.
+  second-override-layers:
+    type: array
+    description: >-
+      Layer IDs selecting the second override keycodes at swipe recognition
+      when override-layer is not active. Any one active layer is enough.
+  second-override-left-keycode:
+    type: int
+    default: 0
+    description: Encoded keycode for a negative swipe when a second override layer is active.
+  second-override-right-keycode:
+    type: int
+    default: 0
+    description: Encoded keycode for a positive swipe when a second override layer is active.
