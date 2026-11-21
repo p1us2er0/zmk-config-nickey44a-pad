@@ -418,10 +418,10 @@
          * Turns both halves off: FUNCTION + left outer top (0), held for 1 s
          * and released. Unlike &soft_off, the left half also waits for the
          * release, which reaches the right half only while the left half is
-         * on. To turn them on again, press both outer keys of the top row
-         * (0 and 11, the same two keys): each half wakes on its own key (see
-         * nickey44a.dtsi). The node name stays within the 8 characters that
-         * the split link allows for a behavior name.
+         * on. No key wakes them, so pressure in a carrying case cannot: turn
+         * each half's power switch off and on (or press its reset button).
+         * The node name stays within the 8 characters that the split link
+         * allows for a behavior name.
          */
         soft_off_hold: so_hold {
             compatible = "zmk,behavior-soft-off";

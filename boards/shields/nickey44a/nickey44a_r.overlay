@@ -301,8 +301,3 @@
             , <&xiao_d 6 GPIO_ACTIVE_HIGH>
             ;
 };
-
-/* Wake from soft off on key 11, the right half's outer key of the top row. */
-&soft_off_waker {
-    extra-gpios = <&xiao_d 6 GPIO_ACTIVE_HIGH>;
-};
