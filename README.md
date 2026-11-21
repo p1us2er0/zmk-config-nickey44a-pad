@@ -28,6 +28,8 @@ BOOTHでは、キット版と完成品を取り扱っています。
 
 ![Nickey44A Keymap](keymap-drawer/nickey44a.svg)
 
+このフォークで変えた点（tomkeyベースのキーマップ、トラックパッドのジェスチャ、ソフトオフなど）は、[カスタマイズのまとめ](docs/customizations.md)にあります。
+
 ---
 
 ## ⌨️ キーマップの変更方法 (Keymap Editor)
