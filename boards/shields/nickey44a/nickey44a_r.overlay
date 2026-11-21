@@ -162,13 +162,14 @@
      * Physical right swipe is negative after the orientation correction.
      * Finger right -> back, left -> forward, as on a MacBook. On layer 1,
      * finger right -> left tab, left -> right tab, as on the left pad.
-     * While NUM is held (LANG2 on the left thumb; layer 3, or NUM_JIS 5 on
-     * WIN_JIS), finger right -> the virtual desktop on the left, left -> the
-     * one on the right, as with a three-finger swipe on a MacBook.
+     * While NUM is held (LANG2 on the left thumb; layer 5), finger right ->
+     * the virtual desktop on the left, left -> the one on the right, as with
+     * a three-finger swipe on a MacBook.
      *
      * macOS ignores the Browser Back/Forward keys, so the Mac profile sends
      * Cmd+[ and Cmd+], which go back and forward in Safari, Chrome and
-     * Finder. The Windows profiles use tps43_touch_swipe_win instead.
+     * Finder. The Windows profiles use tps43_touch_swipe_win instead, and
+     * the iPad tps43_touch_swipe_ipad.
      */
     tps43_touch_swipe: tps43_touch_swipe {
         compatible = "zmk,input-processor-touch-swipe";
@@ -184,7 +185,7 @@
         override-left-keycode = <LC(LS(TAB))>;
         override-right-keycode = <LC(TAB)>;
         /* Ctrl+Left/Right moves between Spaces on macOS. */
-        second-override-layers = <3>;
+        second-override-layers = <5>;
         second-override-left-keycode = <LC(LEFT_ARROW)>;
         second-override-right-keycode = <LC(RIGHT_ARROW)>;
     };
@@ -204,9 +205,38 @@
         override-left-keycode = <LC(LS(TAB))>;
         override-right-keycode = <LC(TAB)>;
         /* Win+Ctrl+Left/Right moves between virtual desktops on Windows. */
-        second-override-layers = <3 5>;
+        second-override-layers = <5>;
         second-override-left-keycode = <LG(LC(LEFT_ARROW))>;
         second-override-right-keycode = <LG(LC(RIGHT_ARROW))>;
+    };
+
+    /*
+     * tps43_touch_swipe for the iPad, which has no desktops: Back/Forward and
+     * tabs as on the Mac. While NUM is held, the first swipe opens the app
+     * switcher (Cmd+Tab) and keeps Cmd pressed until the finger lifts; each
+     * further swipe in the same touch moves the selection, finger left ->
+     * right (Tab), right -> left (Shift+Tab). Lifting the finger switches to
+     * the selected app, so apps further back than the last one are reached.
+     */
+    tps43_touch_swipe_ipad: tps43_touch_swipe_ipad {
+        compatible = "zmk,input-processor-touch-swipe";
+        #input-processor-cells = <0>;
+        hwheel-code = <INPUT_REL_HWHEEL>;
+        wheel-code = <INPUT_REL_WHEEL>;
+        touch-code = <INPUT_BTN_TOUCH>;
+        threshold = <8>;
+        axis-ratio = <2>;
+        left-keycode = <LG(LBKT)>;
+        right-keycode = <LG(RBKT)>;
+        override-layer = <1>;
+        override-left-keycode = <LC(LS(TAB))>;
+        override-right-keycode = <LC(TAB)>;
+        second-override-layers = <5>;
+        second-override-left-keycode = <LS(TAB)>;
+        second-override-right-keycode = <TAB>;
+        second-override-hold-keycode = <LEFT_GUI>;
+        /* Travel per further app; the first swipe needs only threshold. */
+        second-override-repeat-threshold = <24>;
     };
 
     tps43_touch_inertia: tps43_touch_inertia {
@@ -243,12 +273,18 @@
         };
 
         /*
-         * WIN and WIN_JIS (layers 2 and 4 in config/nickey44a.keymap). Without
+         * WIN and WIN_JIS (layers 2 and 3 in config/nickey44a.keymap). Without
          * process-next, this chain runs instead of the one above.
          */
         windows_layers {
-            layers = <2 4>;
+            layers = <2 3>;
             input-processors = RIGHT_PAD_PROCESSORS(&tps43_touch_swipe_win);
+        };
+
+        /* IPAD (layer 4), the same way. */
+        ipad_layer {
+            layers = <4>;
+            input-processors = RIGHT_PAD_PROCESSORS(&tps43_touch_swipe_ipad);
         };
     };
 };

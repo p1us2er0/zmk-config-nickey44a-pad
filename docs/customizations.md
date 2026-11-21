@@ -48,15 +48,28 @@ READMEの図（`keymap-drawer/nickey44a.svg`）で見られる。
 | 0 | MAC | Mac用の基本レイヤー |
 | 1 | MOUSE_SLOW | すべて透過。右パッドを遅くし、2本指の左右スワイプをタブ移動にする |
 | 2 | WIN | Windows用。MACに重ねて、左外側の中と下をWinとCtrlにする |
-| 3 | NUM | 数字と記号。左親指のLANG2を長押し |
-| 4 | WIN_JIS | Windows（JIS）用 |
-| 5 | NUM_JIS | WIN_JIS用のNUM |
+| 3 | WIN_JIS | Windows（JIS）用。WINと同じ入れ替えと、JISで位置が違う記号キー |
+| 4 | IPAD | iPadの目印。中身は空 |
+| 5 | NUM | 数字と記号。左親指のLANG2を長押し |
 | 6 | FUNCTION | Fキー、BTプロファイル、OSの切り替え、電池残量、電源オフ。`;` を長押し |
 | 7 | MOUSE | マウス操作。右親指のLANG1を長押し |
 | 8 | AUTO_MOUSE | 右パッドに触れると有効になる |
 
-1、3、5の番号は変えない。右手のoverlayが、この番号でスワイプの動作を
-切り替えている。
+WIN、WIN_JIS、IPADは、つないでいる機器の種類を表す目印で、FUNCTIONの
+BTプロファイルのキーで切り替わる（BT0〜2…Mac、ただしBT2はiPad、
+BT3…Windows、BT4…Windows JIS）。NUMより下に置いて、NUMのキーが
+WIN_JISのキーに負けないようにしている。
+
+番号は右手のoverlay（スワイプの切り替え）と、`nickey44a_r.conf` の
+LEDのレイヤーの色でも使っているので、変えるときは合わせて直す。
+
+### Windows JISの記号
+
+JIS配列のWindowsでは、同じキーでも出る記号が違う（`@` や `[` など）。
+NUMの記号のうち位置が違う11個と、コンボの `` ` `` と `=` は、
+WIN_JISが有効なときにJIS用のキーを送る。以前はNUMの写しのNUM_JISを
+別に持っていたが、レイヤーで送るキーを選ぶ仕組み（下の「MOUSEレイヤーの
+Mac / Windows切り替え」と同じ）にまとめた。NUMを直せば両方に効く。
 
 ### tomkeyから動かしたキー
 
@@ -78,19 +91,21 @@ Nickey44A-PADには、tomkeyにある内側の列と最下段がなく、代わ�
 - tomkeyのSCROLLレイヤーとエンコーダーは削除した。スクロールは
   両パッドの2本指で行う。
 
-### MOUSEレイヤーのMac / Windows切り替え
+### MOUSEレイヤーのMac / Windows / iPad切り替え
 
-MOUSEレイヤー（右親指のLANG1を長押し）のキーのうち、MacとWindowsで
-ショートカットが違うものは、どちらでも同じ操作になるように、WIN・
-WIN_JISレイヤーが有効かどうかで送るキーを変える（Windowsのプロファイル
-を選ぶと有効になる）。
+MOUSEレイヤー（右親指のLANG1を長押し）のキーのうち、機器によって
+ショートカットが違うものは、どれでも同じ操作になるように、WIN・
+WIN_JIS・IPADのどれが有効かで送るキーを変える。
 
-| キー | 操作 | Mac | Windows |
-|---|---|---|---|
-| W / R | 文書の先頭 / 末尾 | `Cmd+↑` / `Cmd+↓` | `Ctrl+Home` / `Ctrl+End` |
-| C / V | 左 / 右の仮想デスクトップ | `Ctrl+←` / `Ctrl+→` | `Win+Ctrl+←` / `Win+Ctrl+→` |
-| Q / A | ページの先頭 / 末尾 | `Home` / `End` | 同じ |
-| U / I | 左 / 右のタブ | `Ctrl+Shift+Tab` / `Ctrl+Tab` | 同じ |
+| キー | 操作 | Mac | Windows | iPad |
+|---|---|---|---|---|
+| W / R | 文書の先頭 / 末尾 | `Cmd+↑` / `Cmd+↓` | `Ctrl+Home` / `Ctrl+End` | Macと同じ |
+| C / V | 左 / 右の仮想デスクトップ | `Ctrl+←` / `Ctrl+→` | `Win+Ctrl+←` / `Win+Ctrl+→` | ホーム画面（`Cmd+H`） / 直前のアプリ（`Cmd+Tab`） |
+| Q / A | ページの先頭 / 末尾 | `Home` / `End` | 同じ | 同じ |
+| U / I | 左 / 右のタブ | `Ctrl+Shift+Tab` / `Ctrl+Tab` | 同じ | 同じ |
+
+コンボのコメントアウト（D + F）も、Macでは `Cmd+/`、Windowsでは
+`Ctrl+/` を送る。
 
 Q / Aは、ブラウザではどちらでもページの先頭 / 末尾に移る。文字の入力中は、
 Windowsでは行頭 / 行末への移動になる。
@@ -142,11 +157,17 @@ uvx --from keymap-drawer keymap -c keymap_drawer.config.yaml draw -j config/nick
 
 右パッドの2本指の左右スワイプは、レイヤーによって送るキーが変わる。
 
-| そのときの状態 | Mac | Windows（WIN・WIN_JIS） |
-|---|---|---|
-| 通常 | 戻る / 進む（`Cmd+[` / `Cmd+]`） | Browser Back / Forward |
-| MOUSE_SLOW（パッドに触れてSpaceを長押し） | タブ移動（`Ctrl+Shift+Tab` / `Ctrl+Tab`） | Macと同じ |
-| NUM（LANG2を長押し） | 仮想デスクトップ（`Ctrl+←` / `Ctrl+→`） | 仮想デスクトップ（`Win+Ctrl+←` / `Win+Ctrl+→`） |
+| そのときの状態 | Mac | Windows（WIN・WIN_JIS） | iPad |
+|---|---|---|---|
+| 通常 | 戻る / 進む（`Cmd+[` / `Cmd+]`） | Browser Back / Forward | Macと同じ |
+| MOUSE_SLOW（パッドに触れてSpaceを長押し） | タブ移動（`Ctrl+Shift+Tab` / `Ctrl+Tab`） | Macと同じ | Macと同じ |
+| NUM（LANG2を長押し） | 仮想デスクトップ（`Ctrl+←` / `Ctrl+→`） | 仮想デスクトップ（`Win+Ctrl+←` / `Win+Ctrl+→`） | アプリスイッチャー（下） |
+
+iPadのアプリスイッチャー：LANG2を押しながら2本指で左右に動かすと、
+`Cmd+Tab` でアプリスイッチャーが開き、指を置いている間は `Cmd` を
+押したままにする。そのまま左右に動かすと選択が1つずつ動き（指を左へで右、
+右へで左）、指を離すと選んだアプリに切り替わる。`Cmd+Tab` を1回押すだけ
+だと直前のアプリとの行き来になるが、これならもっと前のアプリにも行ける。
 
 向きはMacBookと同じで、指を右へで「戻る」、指を左へで右のタブ・右の
 デスクトップに移る。macOSはBrowser Back / Forwardのキーを無視するので、
@@ -154,7 +175,9 @@ Macでは `Cmd+[` / `Cmd+]` を送る。
 
 2つ目のレイヤーでも送るキーを変えられるように、タッチスワイプの
 モジュール（`modules/zmk-input-processor-touch-swipe`）に
-`second-override-layers` を追加した。
+`second-override-layers` を追加した。iPadのアプリスイッチャーのために、
+キーを押したままにして続けて送る `second-override-hold-keycode` と
+`second-override-repeat-threshold` も追加した。
 
 ## 電源
 
@@ -231,3 +254,5 @@ LEDは、そのときのレイヤーの色で光ったまま残っていた。�
 まだ確認していないこと。
 
 - NUMを押したままのスワイプで、仮想デスクトップを移れること。
+- iPadモード（BT2）：アプリスイッチャー、MOUSEのC / V、LEDが消えたままのこと。
+- Windows JISで、NUMの記号とコンボの `` ` `` `=` が正しく出ること。

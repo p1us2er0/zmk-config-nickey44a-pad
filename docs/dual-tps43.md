@@ -54,7 +54,7 @@ FWだけをビルドして書き込む。左手側のFWと`nickey44a_l.overlay`�
 | 縦スクロール後に指を離す | 慣性処理なし | 慣性スクロール |
 | Layer 1で1本指移動 | - | Snipe（移動量を通常の2/3に抑える） |
 | Layer 1で2本指左右スワイプ | 水平スクロール | 右スワイプ：左のタブ／左スワイプ：右のタブ |
-| NUM（左親指のLANG2長押し）で2本指左右スワイプ | 水平スクロール | 右スワイプ：左の仮想デスクトップ／左スワイプ：右の仮想デスクトップ |
+| NUM（左親指のLANG2長押し）で2本指左右スワイプ | 水平スクロール | 右スワイプ：左の仮想デスクトップ／左スワイプ：右の仮想デスクトップ（iPadではアプリスイッチャー） |
 
 ドラッグは、右手で対象へカーソルを移動 → 左手で長押しして保持 →
 右手でカーソルを動かす → 左手の指を離してドロップ、の順で操作する。
@@ -67,15 +67,23 @@ FWだけをビルドして書き込む。左手側のFWと`nickey44a_l.overlay`�
 
 右手の戻る／進むは、Macでは`Cmd+[`／`Cmd+]`を送信する（Safari、Chrome、
 Finderの戻る／進む。macOSはBrowser Back／Forwardのキーを無視する）。
-WIN・WIN_JISのレイヤー（2と4）が有効な間は、Browser Back／Forwardを送信する。
+WIN・WIN_JISのレイヤー（2と3）が有効な間は、Browser Back／Forwardを送信する。
 右のinput-listenerの`windows_layers`が、`tps43_touch_swipe`の代わりに
-`tps43_touch_swipe_win`を使う。
+`tps43_touch_swipe_win`を使う。IPADのレイヤー（4）が有効な間は、
+`ipad_layer`が`tps43_touch_swipe_ipad`を使う。戻る／進むとタブ移動はMacと同じ。
 
-右手の仮想デスクトップ移動は、NUMかNUM_JISのレイヤー（3と5。左親指の
-LANG2を長押し）が有効な間の左右スワイプで、Macでは`Ctrl+←`／`Ctrl+→`、
-WIN・WIN_JISのレイヤーが有効な間は`Win+Ctrl+←`／`Win+Ctrl+→`を送信する。
+右手の仮想デスクトップ移動は、NUMのレイヤー（5。左親指のLANG2を長押し）
+が有効な間の左右スワイプで、Macでは`Ctrl+←`／`Ctrl+→`、WIN・WIN_JISの
+レイヤーが有効な間は`Win+Ctrl+←`／`Win+Ctrl+→`を送信する。
 向きはタブ移動と同じで、指を左へで右のデスクトップ。Layer 1も有効なときは
 タブ移動を優先する。swipe processorの`second-override-layers`で選ぶ。
+
+iPadには仮想デスクトップがないので、IPADのレイヤーが有効な間は、NUMでの
+左右スワイプがアプリスイッチャーになる。最初のスワイプで`Cmd+Tab`を送り、
+指を離すまで`Cmd`を押したままにする。同じタッチで続けて動かすと、24ずつ
+動くたびに選択が1つ動く（指を左へで`Tab`、右へで`Shift+Tab`）。指を離すと
+`Cmd`を離し、選んだアプリに切り替わる。swipe processorの
+`second-override-hold-keycode`と`second-override-repeat-threshold`で設定する。
 
 右手もLayer 1が有効な間は左右スワイプをタブ移動に切り替える。向きは
 指を左へで右のタブ（中身が指について動く向き）。スワイプ成立時の

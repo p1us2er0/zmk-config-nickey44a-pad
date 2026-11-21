@@ -15,12 +15,18 @@
  *   tomkey inner Ctrl+Space            -> combo F + G
  *   tomkey combo ' + H for `           -> J + K
  *
- * Layer numbers differ from tomkey, but the order of the layers that hold
- * keys is the same. Layer 1 must stay MOUSE_SLOW: nickey44a_r.overlay slows
- * the right trackpad and turns its two-finger left/right swipes into tab
- * switching while layer 1 is active, and enters AUTO_MOUSE (8) on touch.
- * NUM (3) and NUM_JIS (5) must keep their numbers too: while either is
- * active, the same swipes switch virtual desktops.
+ * Layer numbers differ from tomkey. nickey44a_r.overlay refers to layers
+ * by number, so keep these in step with it: MOUSE_SLOW (1) slows the right
+ * trackpad and turns its two-finger left/right swipes into tab switching,
+ * WIN (2) and WIN_JIS (3) and IPAD (4) pick the host's swipe keys, NUM (5)
+ * turns the swipes into virtual desktops (the app switcher on the iPad),
+ * and touching the pad enters AUTO_MOUSE (8). The rgbled colors in
+ * nickey44a_r.conf are per layer number too.
+ *
+ * WIN, WIN_JIS and IPAD are host flags, turned on by the Bluetooth profile
+ * keys on FUNCTION. They sit below NUM so that NUM's keys win over the
+ * WIN_JIS keys, and keys that differ by host choose their binding with
+ * layer morphs (zmk,behavior-layer-morph) instead of separate layers.
  */
 
 #include <behaviors.dtsi>
@@ -32,9 +38,9 @@
 #define LAYER_MAC 0
 #define LAYER_MOUSE_SLOW 1
 #define LAYER_WIN 2
-#define LAYER_NUM 3
-#define LAYER_WIN_JIS 4
-#define LAYER_NUM_JIS 5
+#define LAYER_WIN_JIS 3
+#define LAYER_IPAD 4
+#define LAYER_NUM 5
 #define LAYER_FUNCTION 6
 #define LAYER_MOUSE 7
 #define LAYER_AUTO_MOUSE 8
@@ -124,52 +130,36 @@
             key-positions = <16 17>;
         };
 
+        // These pick the key for the host with layer morphs (&os_comment and
+        // the others), on the base layers and NUM.
         comment {
-            bindings = <&kp LG(SLASH)>;
+            bindings = <&os_comment>;
             key-positions = <15 16>;
-            layers = <LAYER_MAC LAYER_WIN LAYER_NUM>;
+            layers = <LAYER_MAC LAYER_WIN LAYER_WIN_JIS LAYER_IPAD LAYER_NUM>;
         };
 
         back_quote {
-            bindings = <&kp GRAVE>;
+            bindings = <&os_grave>;
             key-positions = <19 20>;
-            layers = <LAYER_MAC LAYER_WIN LAYER_NUM>;
+            layers = <LAYER_MAC LAYER_WIN LAYER_WIN_JIS LAYER_IPAD LAYER_NUM>;
         };
 
         equal {
-            bindings = <&kp EQUAL>;
+            bindings = <&os_equal>;
             key-positions = <18 19>;
-            layers = <LAYER_MAC LAYER_WIN LAYER_NUM>;
-        };
-
-        comment_jis {
-            bindings = <&kp LC(SLASH_JIS)>;
-            key-positions = <15 16>;
-            layers = <LAYER_WIN_JIS LAYER_NUM_JIS>;
-        };
-
-        back_quote_jis {
-            bindings = <&kp GRAVE_JIS>;
-            key-positions = <19 20>;
-            layers = <LAYER_WIN_JIS LAYER_NUM_JIS>;
-        };
-
-        equal_jis {
-            bindings = <&equal_jis>;
-            key-positions = <18 19>;
-            layers = <LAYER_WIN_JIS LAYER_NUM_JIS>;
+            layers = <LAYER_MAC LAYER_WIN LAYER_WIN_JIS LAYER_IPAD LAYER_NUM>;
         };
 
         back {
             bindings = <&kp LG(LEFT_ARROW)>;
             key-positions = <25 26>;
-            layers = <LAYER_MAC>;
+            layers = <LAYER_MAC LAYER_IPAD>;
         };
 
         next {
             bindings = <&kp LG(RIGHT_ARROW)>;
             key-positions = <26 27>;
-            layers = <LAYER_MAC>;
+            layers = <LAYER_MAC LAYER_IPAD>;
         };
 
         back_win {
@@ -243,25 +233,41 @@
             label = "BT_WIN_JIS_KBD";
         };
 
+        // The iPad has no monitor to hand over, so no F18/F19.
+        bt_ipad: bt_ipad {
+            compatible = "zmk,behavior-macro-one-param";
+            #binding-cells = <1>;
+            bindings = <&ipad &macro_param_1to2 &bt BT_SEL MACRO_PLACEHOLDER>;
+            label = "BT_IPAD";
+        };
+
         mac_us: mac_us {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&tog_off LAYER_WIN &tog_off LAYER_WIN_JIS>;
+            bindings = <&tog_off LAYER_WIN &tog_off LAYER_WIN_JIS &tog_off LAYER_IPAD>;
             label = "MAC_US";
         };
 
         win_us: win_us {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&tog_on LAYER_WIN &tog_off LAYER_WIN_JIS>;
+            bindings = <&tog_on LAYER_WIN &tog_off LAYER_WIN_JIS &tog_off LAYER_IPAD>;
             label = "WIN_US";
         };
 
         win_jis: win_jis {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&tog_off LAYER_WIN &tog_on LAYER_WIN_JIS>;
+            bindings = <&tog_off LAYER_WIN &tog_on LAYER_WIN_JIS &tog_off LAYER_IPAD>;
             label = "WIN_JIS";
+        };
+
+        // The iPad takes the Mac keys; IPAD picks its swipes and MOUSE keys.
+        ipad: ipad {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&tog_off LAYER_WIN &tog_off LAYER_WIN_JIS &tog_on LAYER_IPAD>;
+            label = "IPAD";
         };
     };
 
@@ -377,14 +383,6 @@
             bindings = <&bt_mac 1>, <&bt_mac_kbd 1>;
         };
 
-        td_bt_mac_2: td_bt_mac_2 {
-            compatible = "zmk,behavior-tap-dance";
-            label = "TD_BT_MAC_2";
-            #binding-cells = <0>;
-            tapping-term-ms = <300>;
-            bindings = <&bt_mac 2>, <&bt_mac_kbd 2>;
-        };
-
         td_bt_win_3: td_bt_win_3 {
             compatible = "zmk,behavior-tap-dance";
             label = "TD_BT_WIN_3";
@@ -451,18 +449,137 @@
         };
 
         // Virtual desktops, as with a two-finger swipe while NUM is held.
-        desk_left: desk_left {
+        desk_left_mw: desk_left_mw {
             compatible = "zmk,behavior-layer-morph";
             #binding-cells = <0>;
             bindings = <&kp LC(LEFT_ARROW)>, <&kp LG(LC(LEFT_ARROW))>;
             layers = <LAYER_WIN LAYER_WIN_JIS>;
         };
 
-        desk_right: desk_right {
+        desk_right_mw: desk_right_mw {
             compatible = "zmk,behavior-layer-morph";
             #binding-cells = <0>;
             bindings = <&kp LC(RIGHT_ARROW)>, <&kp LG(LC(RIGHT_ARROW))>;
             layers = <LAYER_WIN LAYER_WIN_JIS>;
+        };
+
+        // The iPad has no desktops: C goes to the Home Screen, V to the last app.
+        desk_left: desk_left {
+            compatible = "zmk,behavior-layer-morph";
+            #binding-cells = <0>;
+            bindings = <&desk_left_mw>, <&kp LG(H)>;
+            layers = <LAYER_IPAD>;
+        };
+
+        desk_right: desk_right {
+            compatible = "zmk,behavior-layer-morph";
+            #binding-cells = <0>;
+            bindings = <&desk_right_mw>, <&kp LG(TAB)>;
+            layers = <LAYER_IPAD>;
+        };
+
+        // Combos: comment out (Cmd+/ or Ctrl+/), ` and =.
+        os_comment: os_comment {
+            compatible = "zmk,behavior-layer-morph";
+            #binding-cells = <0>;
+            bindings = <&kp LG(SLASH)>, <&kp LC(SLASH)>;
+            layers = <LAYER_WIN LAYER_WIN_JIS>;
+        };
+
+        os_grave: os_grave {
+            compatible = "zmk,behavior-layer-morph";
+            #binding-cells = <0>;
+            bindings = <&kp GRAVE>, <&kp GRAVE_JIS>;
+            layers = <LAYER_WIN_JIS>;
+        };
+
+        os_equal: os_equal {
+            compatible = "zmk,behavior-layer-morph";
+            #binding-cells = <0>;
+            bindings = <&kp EQUAL>, <&equal_jis>;
+            layers = <LAYER_WIN_JIS>;
+        };
+
+        /*
+         * NUM symbols on a different key on a JIS host: the first binding is
+         * for US hosts, the second for WIN_JIS. The other NUM keys are the
+         * same on both.
+         */
+        sym_at: sym_at {
+            compatible = "zmk,behavior-layer-morph";
+            #binding-cells = <0>;
+            bindings = <&kp AT_SIGN>, <&kp AT_SIGN_JIS>;
+            layers = <LAYER_WIN_JIS>;
+        };
+
+        sym_caret: sym_caret {
+            compatible = "zmk,behavior-layer-morph";
+            #binding-cells = <0>;
+            bindings = <&kp CARET>, <&kp CARET_JIS>;
+            layers = <LAYER_WIN_JIS>;
+        };
+
+        sym_amps: sym_amps {
+            compatible = "zmk,behavior-layer-morph";
+            #binding-cells = <0>;
+            bindings = <&kp AMPERSAND>, <&kp AMPERSAND_JIS>;
+            layers = <LAYER_WIN_JIS>;
+        };
+
+        sym_lbrc: sym_lbrc {
+            compatible = "zmk,behavior-layer-morph";
+            #binding-cells = <0>;
+            bindings = <&kp LEFT_BRACE>, <&kp LEFT_BRACE_JIS>;
+            layers = <LAYER_WIN_JIS>;
+        };
+
+        sym_rbrc: sym_rbrc {
+            compatible = "zmk,behavior-layer-morph";
+            #binding-cells = <0>;
+            bindings = <&kp RIGHT_BRACE>, <&kp RIGHT_BRACE_JIS>;
+            layers = <LAYER_WIN_JIS>;
+        };
+
+        sym_bsls: sym_bsls {
+            compatible = "zmk,behavior-layer-morph";
+            #binding-cells = <0>;
+            bindings = <&kp BACKSLASH>, <&kp BACKSLASH_JIS>;
+            layers = <LAYER_WIN_JIS>;
+        };
+
+        sym_pipe: sym_pipe {
+            compatible = "zmk,behavior-layer-morph";
+            #binding-cells = <0>;
+            bindings = <&kp PIPE>, <&kp PIPE_JIS>;
+            layers = <LAYER_WIN_JIS>;
+        };
+
+        sym_tilde: sym_tilde {
+            compatible = "zmk,behavior-layer-morph";
+            #binding-cells = <0>;
+            bindings = <&kp TILDE>, <&kp TILDE_JIS>;
+            layers = <LAYER_WIN_JIS>;
+        };
+
+        sym_star: sym_star {
+            compatible = "zmk,behavior-layer-morph";
+            #binding-cells = <0>;
+            bindings = <&kp ASTERISK>, <&kp ASTERISK_JIS>;
+            layers = <LAYER_WIN_JIS>;
+        };
+
+        sym_lbkt: sym_lbkt {
+            compatible = "zmk,behavior-layer-morph";
+            #binding-cells = <0>;
+            bindings = <&kp LEFT_BRACKET>, <&kp LEFT_BRACKET_JIS>;
+            layers = <LAYER_WIN_JIS>;
+        };
+
+        sym_rbkt: sym_rbkt {
+            compatible = "zmk,behavior-layer-morph";
+            #binding-cells = <0>;
+            bindings = <&kp RIGHT_BRACKET>, <&kp RIGHT_BRACKET_JIS>;
+            layers = <LAYER_WIN_JIS>;
         };
     };
 
@@ -500,38 +617,41 @@
             >;
         };
 
-        NUM {
-            bindings = <
-&trans  &kp NUMBER_1     &kp NUMBER_2  &kp NUMBER_3   &kp NUMBER_4  &kp N5                         &kp NUMBER_6  &kp N7         &kp N8            &kp N9             &kp N0  &trans
-&trans  &kp EXCLAMATION  &kp AT_SIGN   &kp HASH       &kp DOLLAR    &kp PERCENT                    &kp CARET     &kp AMPERSAND  &kp LEFT_BRACE    &kp RIGHT_BRACE    &trans  &trans
-&trans  &trans           &kp SLASH     &kp BACKSLASH  &kp PIPE      &kp TILDE    &none     &none   &kp QUESTION  &kp ASTERISK   &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &trans  &trans
-                                                      &trans        &trans       &trans    &trans  &trans        &trans
-            >;
-        };
-
         WIN_JIS {
             bindings = <
-&trans            &trans  &trans  &trans  &trans                   &trans                                   &trans  &trans                      &trans                          &trans                         &trans             &lt_semi_jis LAYER_FUNCTION 0
-&kp LEFT_WIN      &trans  &trans  &trans  &trans                   &trans                                   &trans  &trans                      &trans                          &trans                         &single_quote_jis  &trans
-&kp LEFT_CONTROL  &trans  &trans  &trans  &trans                   &trans  &none                    &none   &trans  &trans                      &td_comma_left_parenthesis_jis  &td_dot_right_parenthesis_jis  &trans             &trans
-                                          &lt LAYER_NUM_JIS LANG2  &trans  &lt LAYER_MOUSE LANG1    &trans  &trans  &mt_minus_jis LEFT_SHIFT 0
+&trans            &trans  &trans  &trans  &trans  &trans                                   &trans  &trans                      &trans                          &trans                         &trans             &lt_semi_jis LAYER_FUNCTION 0
+&kp LEFT_WIN      &trans  &trans  &trans  &trans  &trans                                   &trans  &trans                      &trans                          &trans                         &single_quote_jis  &trans
+&kp LEFT_CONTROL  &trans  &trans  &trans  &trans  &trans  &none                    &none   &trans  &trans                      &td_comma_left_parenthesis_jis  &td_dot_right_parenthesis_jis  &trans             &trans
+                                          &trans  &trans  &lt LAYER_MOUSE LANG1    &trans  &trans  &mt_minus_jis LEFT_SHIFT 0
             >;
         };
 
-        NUM_JIS {
+        // Layer 4. Only a flag for the iPad (BT2), like WIN for Windows:
+        // nickey44a_r.overlay and the MOUSE keys C and V check it. Turned on
+        // by &bt_ipad, off by the other profile keys.
+        IPAD {
             bindings = <
-&trans  &kp NUMBER_1         &kp NUMBER_2     &kp NUMBER_3       &kp NUMBER_4    &kp N5                             &kp NUMBER_6      &kp N7             &kp N8                &kp N9                 &kp N0  &trans
-&trans  &kp EXCLAMATION_JIS  &kp AT_SIGN_JIS  &kp HASH_JIS       &kp DOLLAR_JIS  &kp PERCENT_JIS                    &kp CARET_JIS     &kp AMPERSAND_JIS  &kp LEFT_BRACE_JIS    &kp RIGHT_BRACE_JIS    &trans  &trans
-&trans  &trans               &kp SLASH_JIS    &kp BACKSLASH_JIS  &kp PIPE_JIS    &kp TILDE_JIS    &none     &none   &kp QUESTION_JIS  &kp ASTERISK_JIS   &kp LEFT_BRACKET_JIS  &kp RIGHT_BRACKET_JIS  &trans  &trans
-                                                                 &trans          &trans           &trans    &trans  &trans            &trans
+&trans  &trans  &trans  &trans  &trans  &trans                    &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans                    &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &none     &none   &trans  &trans  &trans  &trans  &trans  &trans
+                                &trans  &trans  &trans    &trans  &trans  &trans
+            >;
+        };
+
+        NUM {
+            bindings = <
+&trans  &kp NUMBER_1     &kp NUMBER_2  &kp NUMBER_3  &kp NUMBER_4  &kp N5                         &kp NUMBER_6  &kp N7     &kp N8     &kp N9     &kp N0  &trans
+&trans  &kp EXCLAMATION  &sym_at       &kp HASH      &kp DOLLAR    &kp PERCENT                    &sym_caret    &sym_amps  &sym_lbrc  &sym_rbrc  &trans  &trans
+&trans  &trans           &kp SLASH     &sym_bsls     &sym_pipe     &sym_tilde   &none     &none   &kp QUESTION  &sym_star  &sym_lbkt  &sym_rbkt  &trans  &trans
+                                                     &trans        &trans       &trans    &trans  &trans        &trans
             >;
         };
 
         FUNCTION {
             bindings = <
-&soft_off_hold  &ind_bat  &trans   &trans  &sys_reset  &bootloader                                    &td_bt_mac_0  &td_bt_mac_1  &td_bt_mac_2  &td_bt_win_3  &td_bt_win_jis_4  &trans
-&trans          &kp F1    &kp F2   &kp F3  &kp F4      &kp F5                                         &kp F6        &kp F7        &kp F8        &kp F9        &kp F10           &trans
-&trans          &kp F11   &kp F12  &trans  &trans      &kp LG(LS(S))  &none                   &none   &bootloader   &sys_reset    &mac_us       &win_us       &win_jis          &bt BT_CLR
+&soft_off_hold  &ind_bat  &trans   &trans  &sys_reset  &bootloader                                    &td_bt_mac_0  &td_bt_mac_1  &bt_ipad 2  &td_bt_win_3  &td_bt_win_jis_4  &trans
+&trans          &kp F1    &kp F2   &kp F3  &kp F4      &kp F5                                         &kp F6        &kp F7        &kp F8      &kp F9        &kp F10           &trans
+&trans          &kp F11   &kp F12  &trans  &trans      &kp LG(LS(S))  &none                   &none   &bootloader   &sys_reset    &mac_us     &win_us       &win_jis          &bt BT_CLR
                                            &trans      &trans         &kp LG(LS(NUMBER_4))    &trans  &trans        &trans
             >;
         };
