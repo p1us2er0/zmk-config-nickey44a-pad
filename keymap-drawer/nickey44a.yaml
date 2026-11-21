@@ -12,7 +12,7 @@ layers:
   - I
   - O
   - P
-  - {t: '-', h: RIGHT SHIFT}
+  - {t: ;, h: FUNCTION}
   - LEFT CONTROL
   - A
   - S
@@ -44,7 +44,7 @@ layers:
   - {t: LANG1, h: MOUSE}
   - BACKSPACE
   - ENTER
-  - {t: ;, h: FUNCTION}
+  - {t: '-', h: RIGHT SHIFT}
   MOUSE_SLOW:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -192,7 +192,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: '-', h: LEFT SHIFT, s: Sft+INT1}
+  - {t: ;, h: FUNCTION, s: ''''}
   - LEFT WIN
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -224,7 +224,7 @@ layers:
   - {t: LANG1, h: MOUSE}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: ;, h: FUNCTION, s: ''''}
+  - {t: '-', h: LEFT SHIFT, s: Sft+INT1}
   NUM_JIS:
   - {t: ▽, type: trans}
   - '1'
@@ -282,7 +282,7 @@ layers:
   - {t: BT2 Mac, s: 2x kbd only}
   - {t: BT3 Win, s: 2x kbd only}
   - {t: BT4 Win JIS, s: 2x kbd only}
-  - Boot
+  - {type: held}
   - {t: ▽, type: trans}
   - F1
   - F2
@@ -303,7 +303,7 @@ layers:
   - Gui+Sft+S
   - ''
   - ''
-  - {t: ▽, type: trans}
+  - Boot
   - {t: ▽, type: trans}
   - Mac
   - Win
@@ -314,7 +314,7 @@ layers:
   - Gui+Sft+4
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {type: held}
+  - {t: ▽, type: trans}
   MOUSE:
   - {t: ▽, type: trans}
   - HOME
