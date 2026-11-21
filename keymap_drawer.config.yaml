@@ -21,3 +21,7 @@ parse_config:
     "&sys_reset": Reset
     "&soft_off_hold": {t: Power off, s: "hold 1s"}
     "&ind_bat": {t: Battery, s: LED}
+    "&doc_top": {t: Doc top, s: "Mac/Win"}
+    "&doc_bottom": {t: Doc end, s: "Mac/Win"}
+    "&desk_left": {t: "Desk ←", s: "Mac/Win"}
+    "&desk_right": {t: "Desk →", s: "Mac/Win"}

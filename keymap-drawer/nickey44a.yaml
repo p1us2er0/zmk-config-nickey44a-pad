@@ -318,9 +318,9 @@ layers:
   MOUSE:
   - {t: ▽, type: trans}
   - HOME
-  - Gui+UP ARROW
+  - {t: Doc top, s: Mac/Win}
   - UP ARROW
-  - Gui+DOWN
+  - {t: Doc end, s: Mac/Win}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - Sft+Ctl+TAB
@@ -343,8 +343,8 @@ layers:
   - {t: ▽, type: trans}
   - LEFT SHIFT
   - ''
-  - Ctl+LEFT ARROW
-  - Ctl+RIGHT ARROW
+  - {t: Desk ←, s: Mac/Win}
+  - {t: Desk →, s: Mac/Win}
   - ''
   - ''
   - ''

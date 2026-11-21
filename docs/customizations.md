@@ -78,6 +78,26 @@ Nickey44A-PADには、tomkeyにある内側の列と最下段がなく、代わ�
 - tomkeyのSCROLLレイヤーとエンコーダーは削除した。スクロールは
   両パッドの2本指で行う。
 
+### MOUSEレイヤーのMac / Windows切り替え
+
+MOUSEレイヤー（右親指のLANG1を長押し）のキーのうち、MacとWindowsで
+ショートカットが違うものは、どちらでも同じ操作になるように、WIN・
+WIN_JISレイヤーが有効かどうかで送るキーを変える（Windowsのプロファイル
+を選ぶと有効になる）。
+
+| キー | 操作 | Mac | Windows |
+|---|---|---|---|
+| W / R | 文書の先頭 / 末尾 | `Cmd+↑` / `Cmd+↓` | `Ctrl+Home` / `Ctrl+End` |
+| C / V | 左 / 右の仮想デスクトップ | `Ctrl+←` / `Ctrl+→` | `Win+Ctrl+←` / `Win+Ctrl+→` |
+| Q / A | ページの先頭 / 末尾 | `Home` / `End` | 同じ |
+| U / I | 左 / 右のタブ | `Ctrl+Shift+Tab` / `Ctrl+Tab` | 同じ |
+
+Q / Aは、ブラウザではどちらでもページの先頭 / 末尾に移る。文字の入力中は、
+Windowsでは行頭 / 行末への移動になる。
+
+切り替えは、mod-morphのレイヤー版として書いた `zmk,behavior-layer-morph`
+（`src/behavior_layer_morph.c`）で行う。レイヤーは増やしていない。
+
 ### Reset と Boot
 
 FUNCTIONレイヤーのResetとBootは、押したキーがある側にだけ効く（ZMKの

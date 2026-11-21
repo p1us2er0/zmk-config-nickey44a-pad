@@ -1,0 +1,17 @@
+# Implemented in src/behavior_layer_morph.c.
+description: |
+  Invokes the second of two bindings while any of the given layers is
+  active, and the first one otherwise.
+
+compatible: "zmk,behavior-layer-morph"
+
+include: zero_param.yaml
+
+properties:
+  bindings:
+    type: phandle-array
+    required: true
+  layers:
+    type: array
+    required: true
+    description: Layers that select the second binding.

@@ -430,6 +430,40 @@
             #binding-cells = <0>;
             hold-time-ms = <1000>;
         };
+
+        /*
+         * MOUSE keys that do the same thing on the Mac and on Windows: the
+         * first binding is for the Mac, the second for WIN and WIN_JIS (on
+         * while a Windows profile is selected). See src/behavior_layer_morph.c.
+         */
+        doc_top: doc_top {
+            compatible = "zmk,behavior-layer-morph";
+            #binding-cells = <0>;
+            bindings = <&kp LG(UP_ARROW)>, <&kp LC(HOME)>;
+            layers = <LAYER_WIN LAYER_WIN_JIS>;
+        };
+
+        doc_bottom: doc_bottom {
+            compatible = "zmk,behavior-layer-morph";
+            #binding-cells = <0>;
+            bindings = <&kp LG(DOWN_ARROW)>, <&kp LC(END)>;
+            layers = <LAYER_WIN LAYER_WIN_JIS>;
+        };
+
+        // Virtual desktops, as with a two-finger swipe while NUM is held.
+        desk_left: desk_left {
+            compatible = "zmk,behavior-layer-morph";
+            #binding-cells = <0>;
+            bindings = <&kp LC(LEFT_ARROW)>, <&kp LG(LC(LEFT_ARROW))>;
+            layers = <LAYER_WIN LAYER_WIN_JIS>;
+        };
+
+        desk_right: desk_right {
+            compatible = "zmk,behavior-layer-morph";
+            #binding-cells = <0>;
+            bindings = <&kp LC(RIGHT_ARROW)>, <&kp LG(LC(RIGHT_ARROW))>;
+            layers = <LAYER_WIN LAYER_WIN_JIS>;
+        };
     };
 
     keymap {
@@ -504,10 +538,10 @@
 
         MOUSE {
             bindings = <
-&trans  &kp HOME        &kp LG(UP_ARROW)  &kp UP_ARROW        &kp LG(DOWN)         &trans                                        &trans     &kp LS(LC(TAB))  &kp LC(TAB)  &trans  &trans  &trans
-&trans  &kp END         &kp LEFT_ARROW    &kp DOWN_ARROW      &kp RIGHT_ARROW      &trans                                        &trans     &trans           &trans       &trans  &trans  &trans
-&trans  &kp LEFT_SHIFT  &none             &kp LC(LEFT_ARROW)  &kp LC(RIGHT_ARROW)  &none                 &none        &none      &trans     &trans           &trans       &trans  &trans  &trans
-                                                              &trans               &mo LAYER_MOUSE_SLOW  &mkp LCLK    &mkp RCLK  &mkp LCLK  &trans
+&trans  &kp HOME        &doc_top        &kp UP_ARROW    &doc_bottom      &trans                                        &trans     &kp LS(LC(TAB))  &kp LC(TAB)  &trans  &trans  &trans
+&trans  &kp END         &kp LEFT_ARROW  &kp DOWN_ARROW  &kp RIGHT_ARROW  &trans                                        &trans     &trans           &trans       &trans  &trans  &trans
+&trans  &kp LEFT_SHIFT  &none           &desk_left      &desk_right      &none                 &none        &none      &trans     &trans           &trans       &trans  &trans  &trans
+                                                        &trans           &mo LAYER_MOUSE_SLOW  &mkp LCLK    &mkp RCLK  &mkp LCLK  &trans
             >;
         };
 
