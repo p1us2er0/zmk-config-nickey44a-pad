@@ -272,7 +272,7 @@ layers:
   - {t: ▽, type: trans}
   FUNCTION:
   - {t: Power off, s: hold 1s}
-  - {t: ▽, type: trans}
+  - {t: Battery, s: LED}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - Reset
