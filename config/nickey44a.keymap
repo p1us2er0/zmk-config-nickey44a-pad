@@ -420,8 +420,9 @@
          * release, which reaches the right half only while the left half is
          * on. No key wakes them, so pressure in a carrying case cannot: turn
          * each half's power switch off and on (or press its reset button).
-         * The node name stays within the 8 characters that the split link
-         * allows for a behavior name.
+         * The RGB LED goes off too (src/soft_off_leds.c). The node name stays
+         * within the 8 characters that the split link allows for a behavior
+         * name.
          */
         soft_off_hold: so_hold {
             compatible = "zmk,behavior-soft-off";
