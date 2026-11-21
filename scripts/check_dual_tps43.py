@@ -52,8 +52,10 @@ def main():
     for name in ("ZMK_INPUT_PROCESSOR_SCALER", "ZMK_INPUT_PROCESSOR_CODE_MAPPER"):
         assert lc.get("CONFIG_" + name) == "y", name
     for name in ("ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_PROXY",
-                 "ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_FETCHING", "ZMK_STUDIO"):
+                 "ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_FETCHING"):
         assert rc.get("CONFIG_" + name) == "y", name
+    # ZMK Studio is not used: the keymap is edited in git.
+    assert rc.get("CONFIG_ZMK_STUDIO") != "y", "ZMK_STUDIO"
 
     lt = left.label2node["left_tps43"]
     rt = right.label2node["tps43"]
@@ -168,7 +170,7 @@ def main():
         assert count == 1  # Right movement sends no button release.
     count -= 1
     assert count == 0
-    print("PASS: built pins, gestures, split routing, roles, battery/sleep/Studio config")
+    print("PASS: built pins, gestures, split routing, roles, battery/sleep config, no Studio")
     print("PASS: processor order, signed motion blocking, swipe/scroll separation, tab keys, sync")
     print("PASS: event model preserves left hold through movement and a right tap")
     print("Hardware/BLE/Deep Sleep acceptance tests remain manual.")

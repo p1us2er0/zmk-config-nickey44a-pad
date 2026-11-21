@@ -144,8 +144,8 @@ python scripts/check_dual_tps43.py `
 ```
 
 確認対象はピン、RSTのActive HIGH、GPIO/pinctrl競合、gesture設定、
-split reg/device/listener経路、central/peripheral、バッテリー・sleep・Studioの
-有効設定、processor順序。生成されたprocessorの設定値からイベント変換を
+split reg/device/listener経路、central/peripheral、バッテリー・sleepの
+有効設定とStudioの無効設定、processor順序。生成されたprocessorの設定値からイベント変換を
 モデル化し、負値を含むX/Y抑止、スワイプ軸と水平スクロール軸の分離、
 タブ移動のキー設定、WHEEL変換、BTN_1変換、BTN_0とsync保持、
 左保持中の右タップを確認する。

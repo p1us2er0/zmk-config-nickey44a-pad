@@ -496,8 +496,8 @@
         FUNCTION {
             bindings = <
 &soft_off_hold  &ind_bat  &trans   &trans  &sys_reset  &bootloader                                    &td_bt_mac_0  &td_bt_mac_1  &td_bt_mac_2  &td_bt_win_3  &td_bt_win_jis_4  &trans
-&trans          &kp F1    &kp F2   &kp F3  &kp F4      &kp F5                                         &kp F6        &kp F7        &kp F8        &kp F9        &kp F10           &sys_reset
-&studio_unlock  &kp F11   &kp F12  &trans  &trans      &kp LG(LS(S))  &none                   &none   &bootloader   &trans        &mac_us       &win_us       &win_jis          &bt BT_CLR
+&trans          &kp F1    &kp F2   &kp F3  &kp F4      &kp F5                                         &kp F6        &kp F7        &kp F8        &kp F9        &kp F10           &trans
+&trans          &kp F11   &kp F12  &trans  &trans      &kp LG(LS(S))  &none                   &none   &bootloader   &sys_reset    &mac_us       &win_us       &win_jis          &bt BT_CLR
                                            &trans      &trans         &kp LG(LS(NUMBER_4))    &trans  &trans        &trans
             >;
         };

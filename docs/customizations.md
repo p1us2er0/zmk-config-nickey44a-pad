@@ -15,8 +15,20 @@ scripts/build.sh nickey44a_l   # 左手
 scripts/build.sh               # build.yaml のすべて
 ```
 
-書き込むときは、XIAOのリセットボタンを2回押してブートモードにし、
-表示された `XIAO-BOOT` に `.uf2` をコピーする。
+書き込むときは、XIAOのリセットボタンを2回押すか、FUNCTIONレイヤーの
+Bootキー（下の「Reset と Boot」）でブートモードにし、表示された
+`XIAO-BOOT` に `.uf2` をコピーする。
+
+`build.yaml` の `snippet` や `cmake-args` を消したときは、ビルド用の
+Dockerボリュームにある古い設定が残るので、そのターゲットのビルド
+ディレクトリを消してから作り直す。
+
+```sh
+docker run --rm -v nickey44a-zmk-ws:/ws zmkfirmware/zmk-build-arm:3.5 rm -rf /ws/build/nickey44a_r
+```
+
+ZMK Studioは使わないので、右手のビルドから外した（キーマップはgitで
+管理する）。
 
 右手がcentral。キーマップもトラックパッドの処理も右手で行うため、
 キーマップやジェスチャを変えたときは右手だけ書き込めばよい。左手は、
@@ -65,8 +77,19 @@ Nickey44A-PADには、tomkeyにある内側の列と最下段がなく、代わ�
 
 - tomkeyのSCROLLレイヤーとエンコーダーは削除した。スクロールは
   両パッドの2本指で行う。
-- 右手のブートローダーは、FUNCTIONレイヤーのNの位置（32）にある。11は
-  FUNCTIONを押すためのキーなので、FUNCTIONレイヤーの11は押せない。
+
+### Reset と Boot
+
+FUNCTIONレイヤーのResetとBootは、押したキーがある側にだけ効く（ZMKの
+仕様）。左右それぞれに置いてある。
+
+| | Reset（再起動） | Boot（ブートモード） |
+|---|---|---|
+| 左手に効く | R | T |
+| 右手に効く | M | N |
+
+右手のResetは、F10の隣（右外側の中）から押し間違えにくいMへ移した。
+FUNCTIONを押す `;`（11）と同じ右手だけで押せる。
 
 ### キーマップの編集
 

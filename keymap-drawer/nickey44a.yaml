@@ -294,8 +294,8 @@ layers:
   - F8
   - F9
   - F10
-  - Reset
-  - Studio unlock
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
   - F11
   - F12
   - {t: ▽, type: trans}
@@ -304,7 +304,7 @@ layers:
   - ''
   - ''
   - Boot
-  - {t: ▽, type: trans}
+  - Reset
   - Mac
   - Win
   - Win JIS
