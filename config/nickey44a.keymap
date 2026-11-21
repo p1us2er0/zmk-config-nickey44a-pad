@@ -8,8 +8,10 @@
  *   tomkey bottom row Cmd / Opt / Ctrl -> left outer column bottom / top / middle
  *   tomkey inner ;/FUNCTION            -> right thumb outer (43)
  *   tomkey inner -/Shift               -> right outer column top (11)
- *   tomkey inner '                     -> right outer column middle (23)
- *   tomkey bottom right Del            -> right outer column bottom (37)
+ *   tomkey inner '                     -> right home row, pinky (22)
+ *   tomkey bottom right Del            -> right bottom row, pinky (36)
+ *   tomkey pinky F2 / F7               -> right outer column middle / bottom (23 / 37)
+ *                                         (FUNCTION keeps F10 and &win_jis in place)
  *   tomkey inner Ctrl+Space            -> combo F + G
  *   tomkey combo ' + H for `           -> J + K
  *
@@ -416,9 +418,9 @@
 
         MAC {
             bindings = <
-&kp LEFT_ALT      &kp Q             &kp W  &kp E  &kp R                &kp T                                              &kp Y      &kp U                    &kp I                       &kp O                      &kp P   &mt RIGHT_SHIFT MINUS
-&kp LEFT_CONTROL  &kp A             &kp S  &kp D  &kp F                &kp G                                              &kp H      &kp J                    &kp K                       &kp L                      &kp F2  &kp SINGLE_QUOTE
-&kp LEFT_GUI      &mt LEFT_SHIFT Z  &kp X  &kp C  &kp V                &kp B      &none                    &none          &kp N      &kp M                    &td_comma_left_parenthesis  &td_dot_right_parenthesis  &kp F7  &kp DELETE
+&kp LEFT_ALT      &kp Q             &kp W  &kp E  &kp R                &kp T                                              &kp Y      &kp U                    &kp I                       &kp O                      &kp P             &mt RIGHT_SHIFT MINUS
+&kp LEFT_CONTROL  &kp A             &kp S  &kp D  &kp F                &kp G                                              &kp H      &kp J                    &kp K                       &kp L                      &kp SINGLE_QUOTE  &kp F2
+&kp LEFT_GUI      &mt LEFT_SHIFT Z  &kp X  &kp C  &kp V                &kp B      &none                    &none          &kp N      &kp M                    &td_comma_left_parenthesis  &td_dot_right_parenthesis  &kp DELETE        &kp F7
                                                   &lt LAYER_NUM LANG2  &kp SPACE  &lt LAYER_MOUSE LANG1    &kp BACKSPACE  &kp ENTER  &lt LAYER_FUNCTION SEMI
             >;
         };
@@ -456,9 +458,9 @@
 
         WIN_JIS {
             bindings = <
-&trans            &trans  &trans  &trans  &trans                   &trans                                   &trans  &trans                         &trans                          &trans                         &trans  &mt_minus_jis LEFT_SHIFT 0
-&kp LEFT_WIN      &trans  &trans  &trans  &trans                   &trans                                   &trans  &trans                         &trans                          &trans                         &trans  &single_quote_jis
-&kp LEFT_CONTROL  &trans  &trans  &trans  &trans                   &trans  &none                    &none   &trans  &trans                         &td_comma_left_parenthesis_jis  &td_dot_right_parenthesis_jis  &trans  &trans
+&trans            &trans  &trans  &trans  &trans                   &trans                                   &trans  &trans                         &trans                          &trans                         &trans             &mt_minus_jis LEFT_SHIFT 0
+&kp LEFT_WIN      &trans  &trans  &trans  &trans                   &trans                                   &trans  &trans                         &trans                          &trans                         &single_quote_jis  &trans
+&kp LEFT_CONTROL  &trans  &trans  &trans  &trans                   &trans  &none                    &none   &trans  &trans                         &td_comma_left_parenthesis_jis  &td_dot_right_parenthesis_jis  &trans             &trans
                                           &lt LAYER_NUM_JIS LANG2  &trans  &lt LAYER_MOUSE LANG1    &trans  &trans  &lt_semi_jis LAYER_FUNCTION 0
             >;
         };

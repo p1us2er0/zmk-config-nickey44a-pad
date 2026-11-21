@@ -23,8 +23,8 @@ layers:
   - J
   - K
   - L
-  - F2
   - ''''
+  - F2
   - LEFT GUI
   - {t: Z, h: LEFT SHIFT}
   - X
@@ -37,8 +37,8 @@ layers:
   - M
   - {t: ',', s: 2x (}
   - {t: ., s: 2x )}
-  - F7
   - DELETE
+  - F7
   - {t: LANG2, h: NUM}
   - SPACE
   - {t: LANG1, h: MOUSE}
@@ -203,8 +203,8 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
   - {t: '''', s: '"'}
+  - {t: ▽, type: trans}
   - LEFT CONTROL
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
