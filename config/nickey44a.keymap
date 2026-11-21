@@ -413,6 +413,21 @@
             #binding-cells = <1>;
             toggle-mode = "off";
         };
+
+        /*
+         * Turns both halves off: FUNCTION + left outer top (0), held for 1 s
+         * and released. Unlike &soft_off, the left half also waits for the
+         * release, which reaches the right half only while the left half is
+         * on. To turn them on again, press both outer keys of the top row
+         * (0 and 11, the same two keys): each half wakes on its own key (see
+         * nickey44a.dtsi). The node name stays within the 8 characters that
+         * the split link allows for a behavior name.
+         */
+        soft_off_hold: so_hold {
+            compatible = "zmk,behavior-soft-off";
+            #binding-cells = <0>;
+            hold-time-ms = <1000>;
+        };
     };
 
     keymap {
@@ -478,7 +493,7 @@
 
         FUNCTION {
             bindings = <
-&trans          &trans   &trans   &trans  &sys_reset  &bootloader                                    &td_bt_mac_0  &td_bt_mac_1  &td_bt_mac_2  &td_bt_win_3  &td_bt_win_jis_4  &trans
+&soft_off_hold  &trans   &trans   &trans  &sys_reset  &bootloader                                    &td_bt_mac_0  &td_bt_mac_1  &td_bt_mac_2  &td_bt_win_3  &td_bt_win_jis_4  &trans
 &trans          &kp F1   &kp F2   &kp F3  &kp F4      &kp F5                                         &kp F6        &kp F7        &kp F8        &kp F9        &kp F10           &sys_reset
 &studio_unlock  &kp F11  &kp F12  &trans  &trans      &kp LG(LS(S))  &none                   &none   &bootloader   &trans        &mac_us       &win_us       &win_jis          &bt BT_CLR
                                           &trans      &trans         &kp LG(LS(NUMBER_4))    &trans  &trans        &trans

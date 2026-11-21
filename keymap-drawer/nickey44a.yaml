@@ -271,7 +271,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   FUNCTION:
-  - {t: ▽, type: trans}
+  - {t: Power off, s: hold 1s}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}

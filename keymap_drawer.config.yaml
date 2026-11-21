@@ -20,3 +20,4 @@ parse_config:
     "&bootloader": Boot
     "&sys_reset": Reset
     "&studio_unlock": Studio unlock
+    "&soft_off_hold": {t: Power off, s: "hold 1s"}
