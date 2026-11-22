@@ -94,12 +94,13 @@
 /*
  * Same as tomkey (where this is in tomkey_L.overlay): do not enter the auto
  * mouse layer within 300 ms of a key press, and leave it at once on any key
- * other than the modifiers (Opt 0, Ctrl 12, Cmd 24, Z/Shift 25, -/Shift 43)
- * and the thumb keys used in AUTO_MOUSE (39-42).
+ * other than the modifiers (Opt 0, Ctrl 12, Cmd 24, Z/Shift 25) and the
+ * thumb keys used in AUTO_MOUSE (Space 39, LANG1 40, Enter 42, -/Shift 43).
+ * Backspace (41) types and leaves, like the other keys.
  */
 &zip_temp_layer {
     require-prior-idle-ms = <300>;
-    excluded-positions = <0 12 24 25 39 40 41 42 43>;
+    excluded-positions = <0 12 24 25 39 40 42 43>;
 };
 
 &mkp_input_listener { input-processors = <&zip_temp_layer LAYER_AUTO_MOUSE 500>; };
@@ -658,10 +659,10 @@
 
         MOUSE {
             bindings = <
-&trans  &kp HOME        &doc_top        &kp UP_ARROW    &doc_bottom      &trans                                        &trans     &kp LS(LC(TAB))  &kp LC(TAB)  &trans  &trans  &trans
-&trans  &kp END         &kp LEFT_ARROW  &kp DOWN_ARROW  &kp RIGHT_ARROW  &trans                                        &trans     &trans           &trans       &trans  &trans  &trans
-&trans  &kp LEFT_SHIFT  &none           &desk_left      &desk_right      &none                 &none        &none      &trans     &trans           &trans       &trans  &trans  &trans
-                                                        &trans           &mo LAYER_MOUSE_SLOW  &mkp LCLK    &mkp RCLK  &mkp LCLK  &trans
+&trans  &kp HOME        &doc_top        &kp UP_ARROW    &doc_bottom      &trans                                     &trans     &kp LS(LC(TAB))  &kp LC(TAB)  &trans  &trans  &trans
+&trans  &kp END         &kp LEFT_ARROW  &kp DOWN_ARROW  &kp RIGHT_ARROW  &trans                                     &trans     &trans           &trans       &trans  &trans  &trans
+&trans  &kp LEFT_SHIFT  &none           &desk_left      &desk_right      &none                 &none        &none   &trans     &trans           &trans       &trans  &trans  &trans
+                                                        &trans           &mo LAYER_MOUSE_SLOW  &mkp LCLK    &trans  &mkp LCLK  &mkp RCLK
             >;
         };
 
@@ -671,10 +672,10 @@
         // after using the trackpad.
         AUTO_MOUSE {
             bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans                                        &trans     &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans                                        &trans     &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans                &none        &none      &trans     &trans  &trans  &trans  &trans  &trans
-                                &trans  &mo LAYER_MOUSE_SLOW  &mkp LCLK    &mkp RCLK  &mkp LCLK  &trans
+&trans  &trans  &trans  &trans  &trans  &trans                                     &trans     &trans     &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans                                     &trans     &trans     &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans                &none        &none   &trans     &trans     &trans  &trans  &trans  &trans
+                                &trans  &mo LAYER_MOUSE_SLOW  &mkp LCLK    &trans  &mkp LCLK  &mkp RCLK
             >;
         };
     };

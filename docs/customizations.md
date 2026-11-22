@@ -151,7 +151,9 @@ uvx --from keymap-drawer keymap -c keymap_drawer.config.yaml draw -j config/nick
 - スクロールは、ホストのナチュラルスクロールをオンにしたとき（Windowsでは
   マウスのスクロール方向を逆にしたとき）に、中身が指について動く向き。
 - 右パッドに触れると、AUTO_MOUSEに800 ms入る。その間は、右親指のLANG1と
-  Enterが左クリック、BackSpaceが右クリック、Spaceの長押しがMOUSE_SLOWになる。
+  Enterが左クリック、右親指の外側（`-`）が右クリック、Spaceの長押しが
+  MOUSE_SLOWになる。BackSpaceはそのままBackSpaceで、押すとAUTO_MOUSEを
+  抜ける。MOUSEレイヤーの右クリックも同じ位置。
 - 左パッドは、2本指の左右で水平スクロール、上下でタブ移動（指を上へで
   右のタブ）。長押しで左ボタンを押したままにでき、ドラッグに使う。
 
@@ -256,3 +258,4 @@ LEDは、そのときのレイヤーの色で光ったまま残っていた。�
 - NUMを押したままのスワイプで、仮想デスクトップを移れること。
 - iPadモード（BT2）：アプリスイッチャー、MOUSEのC / V、LEDが消えたままのこと。
 - Windows JISで、NUMの記号とコンボの `` ` `` `=` が正しく出ること。
+- 右クリックが右親指の外側（`-`）に移り、BackSpaceが打てること。
