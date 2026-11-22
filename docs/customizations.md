@@ -48,7 +48,7 @@ READMEの図（`keymap-drawer/nickey44a.svg`）で見られる。
 | 0 | MAC | Mac用の基本レイヤー |
 | 1 | MOUSE_SLOW | すべて透過。右パッドを遅くし、2本指の左右スワイプをタブ移動にする |
 | 2 | WIN | Windows用。MACに重ねて、左外側の中と下をWinとCtrlにする |
-| 3 | WIN_JIS | Windows（JIS）用。WINと同じ入れ替えと、JISで位置が違う記号キー |
+| 3 | WIN_JIS | Windows（JIS）用。WINと一緒に有効になり、JISで記号が違う5キーだけを持つ |
 | 4 | IPAD | iPadの目印。中身は空 |
 | 5 | NUM | 数字と記号。左親指のLANG2を長押し |
 | 6 | FUNCTION | Fキー、BTプロファイル、OSの切り替え、電池残量、電源オフ。`;` を長押し |
@@ -56,9 +56,26 @@ READMEの図（`keymap-drawer/nickey44a.svg`）で見られる。
 | 8 | AUTO_MOUSE | 右パッドに触れると有効になる |
 
 WIN、WIN_JIS、IPADは、つないでいる機器の種類を表す目印で、FUNCTIONの
-BTプロファイルのキーで切り替わる（BT0〜2…Mac、ただしBT2はiPad、
-BT3…Windows、BT4…Windows JIS）。NUMより下に置いて、NUMのキーが
+BTプロファイルのキーで切り替わる。
+
+| プロファイル | 機器 | 有効になる目印 |
+|---|---|---|
+| BT0、BT1 | Mac | なし |
+| BT2 | iPad | IPAD |
+| BT3 | Windows | WIN |
+| BT4 | Windows（JIS） | WINとWIN_JIS |
+
+JISのWindowsでもWINを有効にするので、WinとCtrlの入れ替えやWindows用の
+ショートカットはWINだけに書けばよく、WIN_JISにはJISで記号が違うキー
+（`;` `'` `,` `.` `-`）だけが残る。NUMより下に置いて、NUMのキーが
 WIN_JISのキーに負けないようにしている。
+
+目印のレイヤーは、ZMKでは電源を切ると消える。そのため、起動したときに
+保存されているBTプロファイルを見て、目印を戻す（`src/profile_layers.c`、
+キーマップの `profile_layers`）。電源スイッチで入れ直したときやソフトオフ
+から起こしたときも、Windowsのプロファイルならそのまま Windows の
+キーになる。FUNCTIONのOSの切り替えキー（Mac / Win / Win JIS）で手動で
+変えた場合は、次にプロファイルを切り替えるか再起動するまでそのまま。
 
 番号は右手のoverlay（スワイプの切り替え）と、`nickey44a_r.conf` の
 LEDのレイヤーの色でも使っているので、変えるときは合わせて直す。
@@ -94,8 +111,8 @@ Nickey44A-PADには、tomkeyにある内側の列と最下段がなく、代わ�
 ### MOUSEレイヤーのMac / Windows / iPad切り替え
 
 MOUSEレイヤー（右親指のLANG1を長押し）のキーのうち、機器によって
-ショートカットが違うものは、どれでも同じ操作になるように、WIN・
-WIN_JIS・IPADのどれが有効かで送るキーを変える。
+ショートカットが違うものは、どれでも同じ操作になるように、WINか
+IPADが有効かで送るキーを変える。
 
 | キー | 操作 | Mac | Windows | iPad |
 |---|---|---|---|---|
@@ -159,7 +176,7 @@ uvx --from keymap-drawer keymap -c keymap_drawer.config.yaml draw -j config/nick
 
 右パッドの2本指の左右スワイプは、レイヤーによって送るキーが変わる。
 
-| そのときの状態 | Mac | Windows（WIN・WIN_JIS） | iPad |
+| そのときの状態 | Mac | Windows | iPad |
 |---|---|---|---|
 | 通常 | 戻る / 進む（`Cmd+[` / `Cmd+]`） | Browser Back / Forward | Macと同じ |
 | MOUSE_SLOW（パッドに触れてSpaceを長押し） | タブ移動（`Ctrl+Shift+Tab` / `Ctrl+Tab`） | Macと同じ | Macと同じ |
@@ -258,4 +275,5 @@ LEDは、そのときのレイヤーの色で光ったまま残っていた。�
 - NUMを押したままのスワイプで、仮想デスクトップを移れること。
 - iPadモード（BT2）：アプリスイッチャー、MOUSEのC / V、LEDが消えたままのこと。
 - Windows JISで、NUMの記号とコンボの `` ` `` `=` が正しく出ること。
+- 電源を入れ直したあと、Windows・iPadのプロファイルで目印が戻っていること。
 - 右クリックが右親指の外側（`-`）に移り、BackSpaceが打てること。

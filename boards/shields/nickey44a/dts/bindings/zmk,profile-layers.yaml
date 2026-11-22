@@ -1,0 +1,26 @@
+# Implemented in src/profile_layers.c.
+description: |
+  Turns layers on and off by the active Bluetooth profile, shortly after
+  startup and whenever the active profile changes. Each child lists the
+  layers for one profile; the other managed layers are turned off. A
+  profile without a child turns all of them off.
+
+compatible: "zmk,profile-layers"
+
+properties:
+  layers:
+    type: array
+    required: true
+    description: Layers set by profile.
+
+child-binding:
+  description: Layers for one Bluetooth profile.
+  properties:
+    profile:
+      type: int
+      required: true
+      description: Profile index, from 0.
+    layers:
+      type: array
+      required: true
+      description: Layers that are on while this profile is active.

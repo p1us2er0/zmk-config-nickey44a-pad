@@ -67,13 +67,14 @@ FWだけをビルドして書き込む。左手側のFWと`nickey44a_l.overlay`�
 
 右手の戻る／進むは、Macでは`Cmd+[`／`Cmd+]`を送信する（Safari、Chrome、
 Finderの戻る／進む。macOSはBrowser Back／Forwardのキーを無視する）。
-WIN・WIN_JISのレイヤー（2と3）が有効な間は、Browser Back／Forwardを送信する。
+WINのレイヤー（2。WindowsのプロファイルではJISでも有効）が有効な間は、
+Browser Back／Forwardを送信する。
 右のinput-listenerの`windows_layers`が、`tps43_touch_swipe`の代わりに
 `tps43_touch_swipe_win`を使う。IPADのレイヤー（4）が有効な間は、
 `ipad_layer`が`tps43_touch_swipe_ipad`を使う。戻る／進むとタブ移動はMacと同じ。
 
 右手の仮想デスクトップ移動は、NUMのレイヤー（5。左親指のLANG2を長押し）
-が有効な間の左右スワイプで、Macでは`Ctrl+←`／`Ctrl+→`、WIN・WIN_JISの
+が有効な間の左右スワイプで、Macでは`Ctrl+←`／`Ctrl+→`、WINの
 レイヤーが有効な間は`Win+Ctrl+←`／`Win+Ctrl+→`を送信する。
 向きはタブ移動と同じで、指を左へで右のデスクトップ。Layer 1も有効なときは
 タブ移動を優先する。swipe processorの`second-override-layers`で選ぶ。

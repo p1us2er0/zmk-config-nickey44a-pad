@@ -2,9 +2,9 @@
  * Layer morph: like &mod_morph, but chosen by layers instead of modifiers.
  *
  * Invokes the second binding while any of `layers` is active, and the first
- * one otherwise. config/nickey44a.keymap uses it for MOUSE keys whose
- * shortcut differs between the Mac and Windows: WIN and WIN_JIS are on while
- * a Windows profile is selected. The binding chosen on press is the one
+ * one otherwise. config/nickey44a.keymap uses it for keys that differ by
+ * host: WIN is on while a Windows profile is selected, WIN_JIS as well for
+ * the JIS one, and IPAD for the iPad. The binding chosen on press is the one
  * released, even if the layers change in between.
  */
 

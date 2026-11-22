@@ -148,7 +148,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ;, h: FUNCTION, s: ''''}
-  - LEFT WIN
+  - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -160,7 +160,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: '''', s: '"'}
   - {t: ▽, type: trans}
-  - LEFT CONTROL
+  - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -176,7 +176,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: LANG1, h: MOUSE}
+  - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: '-', h: LEFT SHIFT, s: Sft+INT1}

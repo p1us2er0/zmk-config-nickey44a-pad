@@ -18,15 +18,18 @@
  * Layer numbers differ from tomkey. nickey44a_r.overlay refers to layers
  * by number, so keep these in step with it: MOUSE_SLOW (1) slows the right
  * trackpad and turns its two-finger left/right swipes into tab switching,
- * WIN (2) and WIN_JIS (3) and IPAD (4) pick the host's swipe keys, NUM (5)
+ * WIN (2) and IPAD (4) pick the host's swipe keys, NUM (5)
  * turns the swipes into virtual desktops (the app switcher on the iPad),
  * and touching the pad enters AUTO_MOUSE (8). The rgbled colors in
  * nickey44a_r.conf are per layer number too.
  *
- * WIN, WIN_JIS and IPAD are host flags, turned on by the Bluetooth profile
- * keys on FUNCTION. They sit below NUM so that NUM's keys win over the
- * WIN_JIS keys, and keys that differ by host choose their binding with
- * layer morphs (zmk,behavior-layer-morph) instead of separate layers.
+ * WIN, WIN_JIS and IPAD are host flags, set by the Bluetooth profile keys
+ * on FUNCTION, and at startup for the saved profile by profile_layers below
+ * (src/profile_layers.c). WIN is on for both Windows profiles; WIN_JIS is
+ * on as well for the JIS one and only holds the keys whose symbols move on
+ * JIS. They sit below NUM so that NUM's keys win over the WIN_JIS keys, and
+ * keys that differ by host choose their binding with layer morphs
+ * (zmk,behavior-layer-morph) instead of separate layers.
  */
 
 #include <behaviors.dtsi>
@@ -176,6 +179,30 @@
         };
     };
 
+    // Host flags by Bluetooth profile (src/profile_layers.c): set at startup
+    // for the saved profile and on each profile change. The profile keys on
+    // FUNCTION set the same layers themselves too, because ZMK raises no
+    // event when the active profile is selected again.
+    profile_layers {
+        compatible = "zmk,profile-layers";
+        layers = <LAYER_WIN LAYER_WIN_JIS LAYER_IPAD>;
+
+        ipad {
+            profile = <2>;
+            layers = <LAYER_IPAD>;
+        };
+
+        windows {
+            profile = <3>;
+            layers = <LAYER_WIN>;
+        };
+
+        windows_jis {
+            profile = <4>;
+            layers = <LAYER_WIN LAYER_WIN_JIS>;
+        };
+    };
+
     macros {
         to_layer_0: to_layer_0 {
             compatible = "zmk,behavior-macro-one-param";
@@ -259,7 +286,7 @@
         win_jis: win_jis {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&tog_off LAYER_WIN &tog_on LAYER_WIN_JIS &tog_off LAYER_IPAD>;
+            bindings = <&tog_on LAYER_WIN &tog_on LAYER_WIN_JIS &tog_off LAYER_IPAD>;
             label = "WIN_JIS";
         };
 
@@ -439,14 +466,14 @@
             compatible = "zmk,behavior-layer-morph";
             #binding-cells = <0>;
             bindings = <&kp LG(UP_ARROW)>, <&kp LC(HOME)>;
-            layers = <LAYER_WIN LAYER_WIN_JIS>;
+            layers = <LAYER_WIN>;
         };
 
         doc_bottom: doc_bottom {
             compatible = "zmk,behavior-layer-morph";
             #binding-cells = <0>;
             bindings = <&kp LG(DOWN_ARROW)>, <&kp LC(END)>;
-            layers = <LAYER_WIN LAYER_WIN_JIS>;
+            layers = <LAYER_WIN>;
         };
 
         // Virtual desktops, as with a two-finger swipe while NUM is held.
@@ -454,14 +481,14 @@
             compatible = "zmk,behavior-layer-morph";
             #binding-cells = <0>;
             bindings = <&kp LC(LEFT_ARROW)>, <&kp LG(LC(LEFT_ARROW))>;
-            layers = <LAYER_WIN LAYER_WIN_JIS>;
+            layers = <LAYER_WIN>;
         };
 
         desk_right_mw: desk_right_mw {
             compatible = "zmk,behavior-layer-morph";
             #binding-cells = <0>;
             bindings = <&kp LC(RIGHT_ARROW)>, <&kp LG(LC(RIGHT_ARROW))>;
-            layers = <LAYER_WIN LAYER_WIN_JIS>;
+            layers = <LAYER_WIN>;
         };
 
         // The iPad has no desktops: C goes to the Home Screen, V to the last app.
@@ -484,7 +511,7 @@
             compatible = "zmk,behavior-layer-morph";
             #binding-cells = <0>;
             bindings = <&kp LG(SLASH)>, <&kp LC(SLASH)>;
-            layers = <LAYER_WIN LAYER_WIN_JIS>;
+            layers = <LAYER_WIN>;
         };
 
         os_grave: os_grave {
@@ -618,18 +645,21 @@
             >;
         };
 
+        // Layer 3. On together with WIN for the JIS Windows profile (BT4), so
+        // WIN gives it Win and Ctrl; this only has the keys whose symbols move
+        // on JIS. The NUM symbols that move are layer morphs on NUM.
         WIN_JIS {
             bindings = <
-&trans            &trans  &trans  &trans  &trans  &trans                                   &trans  &trans                      &trans                          &trans                         &trans             &lt_semi_jis LAYER_FUNCTION 0
-&kp LEFT_WIN      &trans  &trans  &trans  &trans  &trans                                   &trans  &trans                      &trans                          &trans                         &single_quote_jis  &trans
-&kp LEFT_CONTROL  &trans  &trans  &trans  &trans  &trans  &none                    &none   &trans  &trans                      &td_comma_left_parenthesis_jis  &td_dot_right_parenthesis_jis  &trans             &trans
-                                          &trans  &trans  &lt LAYER_MOUSE LANG1    &trans  &trans  &mt_minus_jis LEFT_SHIFT 0
+&trans  &trans  &trans  &trans  &trans  &trans                    &trans  &trans                      &trans                          &trans                         &trans             &lt_semi_jis LAYER_FUNCTION 0
+&trans  &trans  &trans  &trans  &trans  &trans                    &trans  &trans                      &trans                          &trans                         &single_quote_jis  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &none     &none   &trans  &trans                      &td_comma_left_parenthesis_jis  &td_dot_right_parenthesis_jis  &trans             &trans
+                                &trans  &trans  &trans    &trans  &trans  &mt_minus_jis LEFT_SHIFT 0
             >;
         };
 
         // Layer 4. Only a flag for the iPad (BT2), like WIN for Windows:
-        // nickey44a_r.overlay and the MOUSE keys C and V check it. Turned on
-        // by &bt_ipad, off by the other profile keys.
+        // nickey44a_r.overlay and the MOUSE keys C and V check it. Set with
+        // the other host flags (profile_layers and the profile keys).
         IPAD {
             bindings = <
 &trans  &trans  &trans  &trans  &trans  &trans                    &trans  &trans  &trans  &trans  &trans  &trans

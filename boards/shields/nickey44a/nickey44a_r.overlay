@@ -273,11 +273,12 @@
         };
 
         /*
-         * WIN and WIN_JIS (layers 2 and 3 in config/nickey44a.keymap). Without
-         * process-next, this chain runs instead of the one above.
+         * WIN (layer 2 in config/nickey44a.keymap), on for both Windows
+         * profiles. Without process-next, this chain runs instead of the one
+         * above.
          */
         windows_layers {
-            layers = <2 3>;
+            layers = <2>;
             input-processors = RIGHT_PAD_PROCESSORS(&tps43_touch_swipe_win);
         };
 
