@@ -17,7 +17,7 @@
  *
  * Layer numbers differ from tomkey. nickey44a_r.overlay refers to layers
  * by number, so keep these in step with it: MOUSE_SLOW (1) slows the right
- * trackpad and turns its two-finger left/right swipes into tab switching,
+ * trackpad and turns its two-finger left/right swipes into Back/Forward,
  * WIN (2) and IPAD (4) pick the host's swipe keys, NUM (5)
  * turns the swipes into virtual desktops (the app switcher on the iPad),
  * and touching the pad enters AUTO_MOUSE (8). The rgbled colors in
@@ -618,7 +618,7 @@
 
         // Layer 1. Only a switch for nickey44a_r.overlay: while it is active
         // the right trackpad moves at 2/3 speed and its two-finger left/right
-        // swipes switch tabs. Entered with Space in MOUSE and AUTO_MOUSE, like
+        // swipes go back and forward. Entered with Space in MOUSE and AUTO_MOUSE, like
         // MOUSE_SLOW on tomkey.
         MOUSE_SLOW {
             bindings = <

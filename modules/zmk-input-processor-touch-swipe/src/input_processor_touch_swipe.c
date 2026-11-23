@@ -62,6 +62,12 @@ static bool any_layer_active(const int32_t *layers, size_t len) {
     return false;
 }
 
+/* An override selects its keycodes for the swipe recognized now. */
+static bool override_active(const struct touch_swipe_config *cfg) {
+    return (cfg->override_layer >= 0 && zmk_keymap_layer_active(cfg->override_layer)) ||
+           any_layer_active(cfg->second_override_layers, cfg->second_override_layers_len);
+}
+
 static void tap(uint32_t keycode) {
     int64_t timestamp = k_uptime_get();
     int press = raise_zmk_keycode_state_changed_from_encoded(keycode, true, timestamp);
@@ -121,6 +127,15 @@ static int observe_input(const struct device *dev, struct input_event *event,
         return ZMK_INPUT_PROC_CONTINUE;
     }
 
+    /*
+     * Without base keycodes, horizontal movement scrolls unless an override
+     * layer is active. Once a touch has swiped, it scrolls no more.
+     */
+    if (!cfg->left_keycode && !cfg->right_keycode && !data->holding && !data->swipe_fired &&
+        !override_active(cfg)) {
+        return ZMK_INPUT_PROC_CONTINUE;
+    }
+
     if (data->touching && data->holding) {
         /*
          * Hold mode (an app switcher): one more key per repeat threshold of
@@ -164,7 +179,7 @@ static int observe_input(const struct device *dev, struct input_event *event,
             LOG_DBG("touch swipe %s fired", left ? "left" : "right");
         }
     }
-    /* Always suppress horizontal scrolling, including outside a tracked touch. */
+    /* Otherwise suppress horizontal scrolling, including outside a tracked touch. */
     return ZMK_INPUT_PROC_STOP;
 }
 
@@ -187,6 +202,8 @@ static const struct zmk_input_processor_driver_api api = {.handle_event = observ
 
 #define CREATE_INSTANCE(n)                                                                         \
     SECOND_LAYERS(n)                                                                               \
+    BUILD_ASSERT((DT_INST_PROP(n, left_keycode) == 0) == (DT_INST_PROP(n, right_keycode) == 0),   \
+                 "set both base keycodes, or neither to scroll");                                \
     BUILD_ASSERT(DT_INST_PROP(n, override_layer) >= -1 &&                                        \
                  DT_INST_PROP(n, override_layer) < ZMK_KEYMAP_LAYERS_LEN, "invalid override layer"); \
     BUILD_ASSERT(DT_INST_PROP(n, override_layer) < 0 ||                                          \

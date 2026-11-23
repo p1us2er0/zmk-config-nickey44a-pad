@@ -149,6 +149,8 @@
      * cursor. Invert it so that finger up scrolls up, which hosts with
      * natural scrolling on (Mac, and the Windows mouse setting reversed)
      * turn into the content following the finger, as on a MacBook.
+     * RIGHT_PAD_PROCESSORS also inverts HWHEEL with it after the swipe, so
+     * that finger right scrolls the same way as on the left pad.
      */
     tps43_scroll_direction: tps43_scroll_direction {
         compatible = "zmk,input-processor-transform";
@@ -159,12 +161,15 @@
     };
 
     /*
+     * Two fingers left/right scroll horizontally (no base keycodes). Only
+     * with Space held (MOUSE_SLOW, layer 1) or LANG2 held (NUM, layer 5) do
+     * they swipe; the left pad switches tabs.
+     *
      * Physical right swipe is negative after the orientation correction.
-     * Finger right -> back, left -> forward, as on a MacBook. On layer 1,
-     * finger right -> left tab, left -> right tab, as on the left pad.
-     * While NUM is held (LANG2 on the left thumb; layer 5), finger right ->
-     * the virtual desktop on the left, left -> the one on the right, as with
-     * a three-finger swipe on a MacBook.
+     * On layer 1, finger right -> back, left -> forward, as on a MacBook.
+     * While NUM is held, finger right -> the virtual desktop on the left,
+     * left -> the one on the right, as with a three-finger swipe on a
+     * MacBook.
      *
      * macOS ignores the Browser Back/Forward keys, so the Mac profile sends
      * Cmd+[ and Cmd+], which go back and forward in Safari, Chrome and
@@ -179,11 +184,9 @@
         touch-code = <INPUT_BTN_TOUCH>;
         threshold = <8>;
         axis-ratio = <2>;
-        left-keycode = <LG(LBKT)>;
-        right-keycode = <LG(RBKT)>;
         override-layer = <1>;
-        override-left-keycode = <LC(LS(TAB))>;
-        override-right-keycode = <LC(TAB)>;
+        override-left-keycode = <LG(LBKT)>;
+        override-right-keycode = <LG(RBKT)>;
         /* Ctrl+Left/Right moves between Spaces on macOS. */
         second-override-layers = <5>;
         second-override-left-keycode = <LC(LEFT_ARROW)>;
@@ -199,11 +202,9 @@
         touch-code = <INPUT_BTN_TOUCH>;
         threshold = <8>;
         axis-ratio = <2>;
-        left-keycode = <C_AC_BACK>;
-        right-keycode = <C_AC_FORWARD>;
         override-layer = <1>;
-        override-left-keycode = <LC(LS(TAB))>;
-        override-right-keycode = <LC(TAB)>;
+        override-left-keycode = <C_AC_BACK>;
+        override-right-keycode = <C_AC_FORWARD>;
         /* Win+Ctrl+Left/Right moves between virtual desktops on Windows. */
         second-override-layers = <5>;
         second-override-left-keycode = <LG(LC(LEFT_ARROW))>;
@@ -211,8 +212,8 @@
     };
 
     /*
-     * tps43_touch_swipe for the iPad, which has no desktops: Back/Forward and
-     * tabs as on the Mac. While NUM is held, the first swipe opens the app
+     * tps43_touch_swipe for the iPad, which has no desktops: scrolling and
+     * Back/Forward as on the Mac. While NUM is held, the first swipe opens the app
      * switcher (Cmd+Tab) and keeps Cmd pressed until the finger lifts; each
      * further swipe in the same touch moves the selection, finger left ->
      * right (Tab), right -> left (Shift+Tab). Lifting the finger switches to
@@ -226,11 +227,9 @@
         touch-code = <INPUT_BTN_TOUCH>;
         threshold = <8>;
         axis-ratio = <2>;
-        left-keycode = <LG(LBKT)>;
-        right-keycode = <LG(RBKT)>;
         override-layer = <1>;
-        override-left-keycode = <LC(LS(TAB))>;
-        override-right-keycode = <LC(TAB)>;
+        override-left-keycode = <LG(LBKT)>;
+        override-right-keycode = <LG(RBKT)>;
         second-override-layers = <5>;
         second-override-left-keycode = <LS(TAB)>;
         second-override-right-keycode = <TAB>;
@@ -280,12 +279,14 @@
 
 /*
  * Enter AUTO_MOUSE (layer 8 in config/nickey44a.keymap) for 800 ms, as on
- * tomkey, then orient the pad and recognize pinches and swipes.
+ * tomkey, then orient the pad and recognize pinches and swipes. The
+ * horizontal scrolling that the swipe lets through is inverted after it,
+ * so that the swipe directions above stay as they are.
  */
 #define RIGHT_PAD_PROCESSORS(swipe, pinch)                                         \
     <&zip_temp_layer 8 800>, <&tps43_orientation RIGHT_PAD_ORIENTATION>,          \
     <&tps43_scroll_direction INPUT_TRANSFORM_Y_INVERT>, <pinch>, <swipe>,         \
-    <&tps43_touch_inertia>
+    <&tps43_scroll_direction INPUT_TRANSFORM_X_INVERT>, <&tps43_touch_inertia>
 
     tps43_listener: tps43_listener {
         compatible = "zmk,input-listener";

@@ -40,12 +40,17 @@ samples are accumulated until all fingers release, including duplicate down
 events and reversals. Integer arithmetic saturates safely at int32 limits and
 uses int64 for magnitude and ratio calculations.
 
-HWHEEL always returns ZMK_INPUT_PROC_STOP, even outside touch. WHEEL, TOUCH,
-cursor and button events pass unchanged. Touch-inertia code and settings are
+HWHEEL returns ZMK_INPUT_PROC_STOP, even outside touch, except in scroll
+mode below. WHEEL, TOUCH, cursor and button events pass unchanged. Touch-inertia code and settings are
 unchanged. Snipe still scales only cursor X/Y before the common chain.
 
-left-keycode/right-keycode are required encoded ZMK keycodes; Nickey44A sets
-C_AC_BACK/C_AC_FORWARD. The same keycode-state events used by &kp produce a
+left-keycode/right-keycode are encoded ZMK keycodes for a swipe without an
+active override. Leaving both 0 (the default) is scroll mode: HWHEEL passes
+through as horizontal scrolling while neither override is active, and only
+an active override layer turns the movement into a swipe. A touch that has
+fired, or holds a key, keeps suppressing HWHEEL until the finger lifts.
+Nickey44A's right pad uses scroll mode, with Back/Forward on override-layer 1;
+its left pad sets Ctrl+Tab/Ctrl+Shift+Tab. The same keycode-state events used by &kp produce a
 press then release through ZMK's HID listener. Arbitrary behavior bindings
 are not implemented. Tab switching uses Ctrl+Tab/Ctrl+Shift+Tab; the TPS43 driver
 is unchanged.

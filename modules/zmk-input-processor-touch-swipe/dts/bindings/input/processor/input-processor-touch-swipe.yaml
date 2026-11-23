@@ -21,11 +21,14 @@ properties:
     description: Positive horizontal magnitude to total vertical travel ratio.
   left-keycode:
     type: int
-    required: true
-    description: Encoded ZMK keycode tapped on a negative horizontal swipe.
+    default: 0
+    description: >-
+      Encoded ZMK keycode tapped on a negative horizontal swipe. Leave both
+      base keycodes 0 to let horizontal scrolling through unless an override
+      layer is active.
   right-keycode:
     type: int
-    required: true
+    default: 0
     description: Encoded ZMK keycode tapped on a positive horizontal swipe.
   override-layer:
     type: int
