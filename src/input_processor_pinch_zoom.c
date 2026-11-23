@@ -11,6 +11,10 @@
  * When the fingers close or one lifts, the pad reports a large jump of the
  * remaining finger as cursor movement. Once a touch has pinched, its cursor
  * movement (INPUT_REL_X/Y) is dropped until the finger lifts.
+ *
+ * While reset-layer is active, reset-code (the two-finger tap, INPUT_BTN_1,
+ * by default) taps reset-keycode instead of clicking, to go back to the
+ * normal size. Its release is dropped too.
  */
 
 #define DT_DRV_COMPAT zmk_input_processor_pinch_zoom
@@ -21,6 +25,7 @@
 #include <zephyr/logging/log.h>
 #include <drivers/input_processor.h>
 #include <zmk/events/keycode_state_changed.h>
+#include <zmk/keymap.h>
 
 LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
@@ -32,12 +37,29 @@ struct pinch_zoom_config {
     int32_t threshold;
     uint32_t in_keycode;
     uint32_t out_keycode;
+    uint16_t reset_code;
+    int32_t reset_layer;
+    uint32_t reset_keycode;
 };
 
 struct pinch_zoom_data {
     bool pinched;
     int32_t accum;
+    /* reset-code was pressed for a reset, so its release is dropped. */
+    bool resetting;
 };
+
+/*
+ * Drops an event. The listener honours ZMK_INPUT_PROC_STOP only in its base
+ * chain: after a layer override's chain (the WIN chain) it applies the event
+ * anyway. So the event also becomes one that the listener ignores.
+ */
+static int drop_event(struct input_event *event) {
+    event->type = INPUT_EV_MSC;
+    event->code = 0;
+    event->value = 0;
+    return ZMK_INPUT_PROC_STOP;
+}
 
 static void tap(uint32_t keycode) {
     int64_t timestamp = k_uptime_get();
@@ -60,7 +82,21 @@ static int pinch_zoom_handle_event(const struct device *dev, struct input_event 
 
     if (event->type == INPUT_EV_KEY && event->code == cfg->touch_code) {
         /* A new touch, or the end of one: start over. */
-        *data = (struct pinch_zoom_data){0};
+        data->pinched = false;
+        data->accum = 0;
+        return ZMK_INPUT_PROC_CONTINUE;
+    }
+    if (cfg->reset_layer >= 0 && event->type == INPUT_EV_KEY && event->code == cfg->reset_code) {
+        if (event->value && zmk_keymap_layer_active(cfg->reset_layer)) {
+            data->resetting = true;
+            tap(cfg->reset_keycode);
+            LOG_DBG("pinch zoom reset");
+            return drop_event(event);
+        }
+        if (!event->value && data->resetting) {
+            data->resetting = false;
+            return drop_event(event);
+        }
         return ZMK_INPUT_PROC_CONTINUE;
     }
     if (event->type != INPUT_EV_REL) {
@@ -81,11 +117,11 @@ static int pinch_zoom_handle_event(const struct device *dev, struct input_event 
             LOG_DBG("pinch zoom out");
         }
         /* Nothing after this uses the pinch amount. */
-        return ZMK_INPUT_PROC_STOP;
+        return drop_event(event);
     }
 
     if (data->pinched && (event->code == INPUT_REL_X || event->code == INPUT_REL_Y)) {
-        return ZMK_INPUT_PROC_STOP;
+        return drop_event(event);
     }
     return ZMK_INPUT_PROC_CONTINUE;
 }
@@ -96,6 +132,11 @@ static const struct zmk_input_processor_driver_api pinch_zoom_api = {
 
 #define PZ_INST(n)                                                                                 \
     BUILD_ASSERT(DT_INST_PROP(n, threshold) > 0, "threshold must be positive");                    \
+    BUILD_ASSERT(DT_INST_PROP(n, reset_layer) >= -1 &&                                             \
+                     DT_INST_PROP(n, reset_layer) < ZMK_KEYMAP_LAYERS_LEN,                         \
+                 "invalid reset layer");                                                           \
+    BUILD_ASSERT(DT_INST_PROP(n, reset_layer) < 0 || DT_INST_PROP(n, reset_keycode),               \
+                 "reset layer requires reset-keycode");                                            \
     static struct pinch_zoom_data pinch_zoom_data_##n;                                             \
     static const struct pinch_zoom_config pinch_zoom_config_##n = {                                \
         .zoom_code = DT_INST_PROP(n, zoom_code),                                                   \
@@ -103,6 +144,9 @@ static const struct zmk_input_processor_driver_api pinch_zoom_api = {
         .threshold = DT_INST_PROP(n, threshold),                                                   \
         .in_keycode = DT_INST_PROP(n, in_keycode),                                                 \
         .out_keycode = DT_INST_PROP(n, out_keycode),                                               \
+        .reset_code = DT_INST_PROP(n, reset_code),                                                 \
+        .reset_layer = DT_INST_PROP(n, reset_layer),                                               \
+        .reset_keycode = DT_INST_PROP(n, reset_keycode),                                           \
     };                                                                                             \
     DEVICE_DT_INST_DEFINE(n, NULL, NULL, &pinch_zoom_data_##n, &pinch_zoom_config_##n,             \
                           POST_KERNEL, CONFIG_KERNEL_INIT_PRIORITY_DEFAULT, &pinch_zoom_api);

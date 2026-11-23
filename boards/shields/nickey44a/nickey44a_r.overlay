@@ -282,6 +282,9 @@
         threshold = <6>;
         in-keycode = <LG(EQUAL)>;
         out-keycode = <LG(MINUS)>;
+        /* Space held (MOUSE_SLOW) and a two-finger tap: the normal size. */
+        reset-layer = <1>;
+        reset-keycode = <LG(N0)>;
     };
 
     tps43_pinch_zoom_win: tps43_pinch_zoom_win {
@@ -291,6 +294,8 @@
         threshold = <6>;
         in-keycode = <LC(KP_PLUS)>;
         out-keycode = <LC(KP_MINUS)>;
+        reset-layer = <1>;
+        reset-keycode = <LC(N0)>;
     };
 
     tps43_touch_inertia: tps43_touch_inertia {

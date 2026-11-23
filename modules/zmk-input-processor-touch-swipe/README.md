@@ -41,7 +41,9 @@ events and reversals. Integer arithmetic saturates safely at int32 limits and
 uses int64 for magnitude and ratio calculations.
 
 HWHEEL returns ZMK_INPUT_PROC_STOP, even outside touch, except in scroll
-mode below and with `pass-swipe-axis`. That property lets the swipe axis
+mode below and with `pass-swipe-axis`. The event also becomes a
+miscellaneous event with no value, because the input listener applies an
+event after a layer override's chain even when a processor stopped it. That property lets the swipe axis
 through for a second instance on the other axis, so that both see both axes
 for their axis-ratio check; a later processor must drop the passed axis.
 Nickey44A's left pad runs tabs (up/down) then desktops (left/right) this way. WHEEL, TOUCH, cursor and button events pass unchanged. Touch-inertia code and settings are

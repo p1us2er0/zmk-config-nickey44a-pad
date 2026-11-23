@@ -3,6 +3,7 @@ description: |
   Turns a trackpad's pinch amount into zoom keys: in-keycode for each
   threshold of spreading the fingers, out-keycode for each threshold of
   closing them. Drops cursor movement for the rest of a touch that pinched.
+  While reset-layer is active, reset-code taps reset-keycode instead.
 
 compatible: "zmk,input-processor-pinch-zoom"
 
@@ -29,3 +30,17 @@ properties:
     type: int
     required: true
     description: ZMK keycode for closing the fingers (zoom out).
+  reset-code:
+    type: int
+    default: 0x101
+    description: >-
+      Key event code that resets the zoom while reset-layer is active. The
+      TPS43 driver reports a two-finger tap as INPUT_BTN_1.
+  reset-layer:
+    type: int
+    default: -1
+    description: Layer during which reset-code resets the zoom. -1 turns this off.
+  reset-keycode:
+    type: int
+    default: 0
+    description: ZMK keycode that resets the zoom to the normal size.

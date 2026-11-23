@@ -69,6 +69,19 @@ static bool override_active(const struct touch_swipe_config *cfg) {
            any_layer_active(cfg->second_override_layers, cfg->second_override_layers_len);
 }
 
+/*
+ * Drops an event. The listener honours ZMK_INPUT_PROC_STOP only in its base
+ * chain: after a layer override's chain (Nickey44A's WIN chain, for one) it
+ * applies the event anyway. So the event also becomes one that the listener
+ * ignores, a miscellaneous event with no value.
+ */
+static int drop_event(struct input_event *event) {
+    event->type = INPUT_EV_MSC;
+    event->code = 0;
+    event->value = 0;
+    return ZMK_INPUT_PROC_STOP;
+}
+
 static void tap(uint32_t keycode) {
     int64_t timestamp = k_uptime_get();
     int press = raise_zmk_keycode_state_changed_from_encoded(keycode, true, timestamp);
@@ -184,7 +197,7 @@ static int observe_input(const struct device *dev, struct input_event *event,
      * Otherwise suppress horizontal scrolling, including outside a tracked
      * touch, unless a second swipe processor later in the chain needs it.
      */
-    return cfg->pass_swipe_axis ? ZMK_INPUT_PROC_CONTINUE : ZMK_INPUT_PROC_STOP;
+    return cfg->pass_swipe_axis ? ZMK_INPUT_PROC_CONTINUE : drop_event(event);
 }
 
 static const struct zmk_input_processor_driver_api api = {.handle_event = observe_input};
