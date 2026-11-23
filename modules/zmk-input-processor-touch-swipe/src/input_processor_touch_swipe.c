@@ -32,6 +32,7 @@ struct touch_swipe_config {
     uint32_t second_override_right_keycode;
     uint32_t second_override_hold_keycode;
     int32_t second_override_repeat_threshold;
+    bool pass_swipe_axis;
 };
 
 struct touch_swipe_data {
@@ -179,8 +180,11 @@ static int observe_input(const struct device *dev, struct input_event *event,
             LOG_DBG("touch swipe %s fired", left ? "left" : "right");
         }
     }
-    /* Otherwise suppress horizontal scrolling, including outside a tracked touch. */
-    return ZMK_INPUT_PROC_STOP;
+    /*
+     * Otherwise suppress horizontal scrolling, including outside a tracked
+     * touch, unless a second swipe processor later in the chain needs it.
+     */
+    return cfg->pass_swipe_axis ? ZMK_INPUT_PROC_CONTINUE : ZMK_INPUT_PROC_STOP;
 }
 
 static const struct zmk_input_processor_driver_api api = {.handle_event = observe_input};
@@ -237,6 +241,7 @@ static const struct zmk_input_processor_driver_api api = {.handle_event = observ
             DT_INST_PROP(n, second_override_repeat_threshold) > 0                                  \
                 ? DT_INST_PROP(n, second_override_repeat_threshold)                                \
                 : DT_INST_PROP(n, threshold),                                                      \
+        .pass_swipe_axis = DT_INST_PROP(n, pass_swipe_axis),                                       \
     };                                                                                            \
     DEVICE_DT_INST_DEFINE(n, NULL, NULL, &data_##n, &config_##n, POST_KERNEL,                       \
                           CONFIG_KERNEL_INIT_PRIORITY_DEFAULT, &api);

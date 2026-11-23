@@ -19,7 +19,7 @@
  * by number, so keep these in step with it: MOUSE_SLOW (1) slows the right
  * trackpad and turns its two-finger left/right swipes into Back/Forward,
  * WIN (2) and IPAD (4) pick the host's swipe keys, NUM (5)
- * turns the swipes into virtual desktops (the app switcher on the iPad),
+ * turns the right pad's swipes into the app switcher,
  * and touching the pad enters AUTO_MOUSE (8). The rgbled colors in
  * nickey44a_r.conf are per layer number too.
  *
@@ -469,7 +469,7 @@
             layers = <LAYER_WIN>;
         };
 
-        // Virtual desktops, as with a two-finger swipe while NUM is held.
+        // Virtual desktops, as with a two-finger left/right swipe on the left pad.
         desk_left_mw: desk_left_mw {
             compatible = "zmk,behavior-layer-morph";
             #binding-cells = <0>;

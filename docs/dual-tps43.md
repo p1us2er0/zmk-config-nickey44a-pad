@@ -50,12 +50,12 @@ FWだけをビルドして書き込む。左手側のFWと`nickey44a_l.overlay`�
 | 1本指で長押し・保持 | 左ボタンを押したまま保持。指を離すと解除 | 長押しによる左ボタン保持なし |
 | 2本指でタップ | 中クリック | 右クリック |
 | 2本指で上下に動かす | 上へ：右のタブ／下へ：左のタブ | 縦スクロール |
-| 2本指で左右に動かす | 水平スクロール | 水平スクロール |
+| 2本指で左右に動かす | 右スワイプ：左の仮想デスクトップ／左スワイプ：右の仮想デスクトップ（iPadではなし） | 水平スクロール |
 | 2本指でピンチ | - | 広げる：拡大／縮める：縮小（キーを段階的に送る） |
 | 縦スクロール後に指を離す | 慣性処理なし | 慣性スクロール |
 | Layer 1で1本指移動 | - | Snipe（移動量を通常の2/3に抑える） |
-| Layer 1（Space長押し）で2本指左右スワイプ | 水平スクロール | 右スワイプ：戻る／左スワイプ：進む |
-| NUM（左親指のLANG2長押し）で2本指左右スワイプ | 水平スクロール | 右スワイプ：左の仮想デスクトップ／左スワイプ：右の仮想デスクトップ（iPadではアプリスイッチャー） |
+| Layer 1（Space長押し）で2本指左右スワイプ | 同上 | 右スワイプ：戻る／左スワイプ：進む |
+| NUM（左親指のLANG2長押し）で2本指左右スワイプ | 同上 | アプリスイッチャー（全機器） |
 
 ドラッグは、右手で対象へカーソルを移動 → 左手で長押しして保持 →
 右手でカーソルを動かす → 左手の指を離してドロップ、の順で操作する。
@@ -80,21 +80,23 @@ Finderの戻る／進む。macOSはBrowser Back／Forwardのキーを無視す�
 WINのレイヤー（2。WindowsのプロファイルではJISでも有効）が有効な間は、
 Browser Back／Forwardを送信する。
 右のinput-listenerの`windows_layers`が、`tps43_touch_swipe`の代わりに
-`tps43_touch_swipe_win`を使う。IPADのレイヤー（4）が有効な間は、
-`ipad_layer`が`tps43_touch_swipe_ipad`を使う。戻る／進むはMacと同じ。
+`tps43_touch_swipe_win`を使う。iPadはMacと同じキーなので、右手には
+iPad用の設定はない。
 
-右手の仮想デスクトップ移動は、NUMのレイヤー（5。左親指のLANG2を長押し）
-が有効な間の左右スワイプで、Macでは`Ctrl+←`／`Ctrl+→`、WINの
-レイヤーが有効な間は`Win+Ctrl+←`／`Win+Ctrl+→`を送信する。
-指を左へで右のデスクトップ。Layer 1も有効なときは戻る／進むを優先する。
-swipe processorの`second-override-layers`で選ぶ。
+NUMのレイヤー（5。左親指のLANG2を長押し）が有効な間の右手の左右スワイプは、
+全機器でアプリスイッチャーにする（2026-11-24から。それまではMac・Windowsで
+仮想デスクトップ、iPadでアプリスイッチャーだった）。最初のスワイプで
+`Tab`を送り、指を離すまで修飾キー（Mac・iPadは`Cmd`、Windowsは`Alt`）を
+押したままにする。同じタッチで続けて動かすと、24ずつ動くたびに選択が1つ
+動く（指を左へで`Tab`、右へで`Shift+Tab`）。指を離すと修飾キーを離し、
+選んだアプリに切り替わる。Layer 1も有効なときは戻る／進むを優先する。
+swipe processorの`second-override-layers`、`second-override-hold-keycode`、
+`second-override-repeat-threshold`で設定する。
 
-iPadには仮想デスクトップがないので、IPADのレイヤーが有効な間は、NUMでの
-左右スワイプがアプリスイッチャーになる。最初のスワイプで`Cmd+Tab`を送り、
-指を離すまで`Cmd`を押したままにする。同じタッチで続けて動かすと、24ずつ
-動くたびに選択が1つ動く（指を左へで`Tab`、右へで`Shift+Tab`）。指を離すと
-`Cmd`を離し、選んだアプリに切り替わる。swipe processorの
-`second-override-hold-keycode`と`second-override-repeat-threshold`で設定する。
+仮想デスクトップ移動は左手の2本指の左右で行う。Macでは`Ctrl+←`／`Ctrl+→`、
+WINのレイヤーが有効な間は`Win+Ctrl+←`／`Win+Ctrl+→`を送信する。指を右へで
+左のデスクトップ（MacBookの3本指と同じ向き）。iPadには仮想デスクトップが
+ないので、IPADのレイヤーが有効な間は何もしない。左手には横スクロールはない。
 
 スワイプ成立時のレイヤー状態で送信キーを選ぶ。1回のタッチでの発火状態は
 レイヤーを切り替えても維持するため、指を離すまでは再発火しない。
@@ -104,7 +106,7 @@ iPadには仮想デスクトップがないので、IPADのレイヤーが有効
 
 ```text
 左TPS43 → 左input-splitの標準processors → BLE split (reg=0)
-        → 右input-split proxy (reg=0) → 左専用input-listenerのorientation/tab swipe/横スクロール → 共通HID
+        → 右input-split proxy (reg=0) → 左専用input-listenerのorientation/tab swipe/desktop swipe（Mac用かWindows用、iPadはなし）/上下軸の破棄 → 共通HID
 右TPS43 → 右input-listener → Snipe → temp layer/orientation/scroll方向/pinch/swipe（Mac用かWindows用かiPad用）/inertia → 共通HID
 ```
 
@@ -118,8 +120,9 @@ iPadには仮想デスクトップがないので、IPADのレイヤーが有効
 | 3 | `left_wheel_to_hwheel` | REL_WHEEL（2本指の上下）をREL_HWHEELへ変換、値と符号は保持 |
 | 4 | `left_middle_click_mapper` | BTN_1をBTN_2へ変換、DOWN/UPは保持 |
 | 5 | `left_tps43_orientation` | 取り付けの向きに応じて符号をそろえる（右がDIAL正、下がHWHEEL正） |
-| 6 | `left_tps43_tab_swipe` | REL_HWHEEL（上下）からタブ移動を判定し、この軸の出力を抑止。REL_DIALは通過 |
-| 7 | `left_tps43_hscroll` | REL_DIAL（左右）をREL_HWHEELへ変換し、水平スクロールとして出力 |
+| 6 | `left_tps43_tab_swipe` | REL_HWHEEL（上下）からタブ移動を判定。`pass-swipe-axis`で、REL_HWHEELも次へ通す |
+| 7 | `left_tps43_desktop_swipe`（WINでは`_win`、IPADではなし） | REL_DIAL（左右）から仮想デスクトップ移動を判定し、この軸の出力を抑止。上下の動きも見て、斜めの動きで両方が反応しないようにする |
+| 8 | `left_tps43_drop_tab_axis` | 通してきたREL_HWHEELをREL_MISCへ変換。listenerはREL_MISCとREL_DIALを無視するので、どちらの軸もスクロールにならない |
 
 左TPS43の`invert-scroll-y`でWHEELの符号を反転してからHWHEELへ変換し、
 左右スワイプは`invert-scroll-x`で符号を反転する。作者の実測では、
@@ -127,6 +130,7 @@ iPadには仮想デスクトップがないので、IPADのレイヤーが有効
 5の`left_tps43_orientation`が両方の向きを同じ符号にそろえる。
 タブの判定閾値は8、上下方向の累積量が左右方向の総移動量の2倍以上の
 場合にタブを切り替える。上（負）で`Ctrl+Tab`、下（正）で`Ctrl+Shift+Tab`。
+仮想デスクトップも同じ閾値で、左右と上下を入れ替えて判定する。
 
 右TPS43は、`tps43_orientation`でカーソルとスクロールの向きを補正した後、
 `tps43_scroll_direction`で縦スクロールの符号を反転する。補正後は
@@ -194,7 +198,9 @@ Layer 1の右手タブ移動追加後も、右FWのビルドと自動確認はPA
   左手の指を少し動かしても座標に影響せず、右手を止めても保持が継続する。
 - 左手で保持中に右手でタップしても、左手の指を離すまで保持が残る。
 - 左手の上スワイプで右のタブ、下スワイプで左のタブへ移動し、1回のタッチで
-  複数回切り替わらない。左右操作の水平スクロールでタブが切り替わらない。
+  複数回切り替わらない。左右の操作でタブが切り替わらない。
+- 左手の2本指の左右で仮想デスクトップを移り、上下の操作でデスクトップが
+  切り替わらない。iPadでは左右で何も起きない。
 - 右手の2本指の左右で水平スクロールし、向きが左手と同じ。Layer 1では右手の
   右スワイプで戻る、左スワイプで進む。Layer 1のSnipeと縦スクロールも動作する。
 - 左右のキー入力と両側のバッテリー取得が従来通りに動作する。

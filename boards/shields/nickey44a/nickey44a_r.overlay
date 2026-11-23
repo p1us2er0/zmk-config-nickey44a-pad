@@ -90,14 +90,34 @@
     };
 
     /*
-     * Left pad: two-finger left/right scrolls horizontally, two-finger
-     * up/down switches tabs.
+     * Left pad: two-finger up/down switches tabs, two-finger left/right
+     * moves between virtual desktops (Mac and Windows; nothing on the iPad,
+     * which has none). Neither axis scrolls. The tab swipe lets its axis
+     * through so that the desktop swipe sees both axes too, and
+     * left_tps43_drop_tab_axis drops it at the end. Without the desktop
+     * swipe, REL_DIAL reaches the listener, which ignores it.
      */
+#define LEFT_PAD_PROCESSORS(desktop_swipe)                                         \
+    <&left_tps43_orientation LEFT_PAD_ORIENTATION>, <&left_tps43_tab_swipe>,      \
+    <desktop_swipe>, <&left_tps43_drop_tab_axis>
+
     left_tps43_listener: left_tps43_listener {
         compatible = "zmk,input-listener";
         device = <&left_tps43_split>;
-        input-processors = <&left_tps43_orientation LEFT_PAD_ORIENTATION>,
-                           <&left_tps43_tab_swipe>, <&left_tps43_hscroll>;
+        input-processors = LEFT_PAD_PROCESSORS(&left_tps43_desktop_swipe);
+
+        /* WIN (layer 2), as on the right pad. */
+        windows_layers {
+            layers = <2>;
+            input-processors = LEFT_PAD_PROCESSORS(&left_tps43_desktop_swipe_win);
+        };
+
+        /* IPAD (layer 4): tabs only. */
+        ipad_layer {
+            layers = <4>;
+            input-processors = <&left_tps43_orientation LEFT_PAD_ORIENTATION>,
+                               <&left_tps43_tab_swipe>, <&left_tps43_drop_tab_axis>;
+        };
     };
 
     left_tps43_orientation: left_tps43_orientation {
@@ -123,17 +143,46 @@
         axis-ratio = <2>;
         left-keycode = <LC(TAB)>;
         right-keycode = <LC(LS(TAB))>;
+        pass-swipe-axis;
     };
 
     /*
-     * Left/right becomes horizontal scrolling. Finger right is positive, so
-     * the content follows the finger on hosts with natural scrolling on.
+     * Swipes on the left/right axis (DIAL), whose output it suppresses.
+     * Finger right (positive) -> the desktop on the left, finger left -> the
+     * one on the right, as with a three-finger swipe on a MacBook.
+     * Ctrl+Left/Right moves between Spaces on macOS.
      */
-    left_tps43_hscroll: left_tps43_hscroll {
+    left_tps43_desktop_swipe: left_tps43_desktop_swipe {
+        compatible = "zmk,input-processor-touch-swipe";
+        #input-processor-cells = <0>;
+        hwheel-code = <INPUT_REL_DIAL>;
+        wheel-code = <INPUT_REL_HWHEEL>;
+        touch-code = <INPUT_BTN_TOUCH>;
+        threshold = <8>;
+        axis-ratio = <2>;
+        left-keycode = <LC(RIGHT_ARROW)>;
+        right-keycode = <LC(LEFT_ARROW)>;
+    };
+
+    /* Win+Ctrl+Left/Right moves between virtual desktops on Windows. */
+    left_tps43_desktop_swipe_win: left_tps43_desktop_swipe_win {
+        compatible = "zmk,input-processor-touch-swipe";
+        #input-processor-cells = <0>;
+        hwheel-code = <INPUT_REL_DIAL>;
+        wheel-code = <INPUT_REL_HWHEEL>;
+        touch-code = <INPUT_BTN_TOUCH>;
+        threshold = <8>;
+        axis-ratio = <2>;
+        left-keycode = <LG(LC(RIGHT_ARROW))>;
+        right-keycode = <LG(LC(LEFT_ARROW))>;
+    };
+
+    /* The tab axis, passed by left_tps43_tab_swipe; the listener ignores MISC. */
+    left_tps43_drop_tab_axis: left_tps43_drop_tab_axis {
         compatible = "zmk,input-processor-code-mapper";
         #input-processor-cells = <0>;
         type = <INPUT_EV_REL>;
-        map = <INPUT_REL_DIAL INPUT_REL_HWHEEL>;
+        map = <INPUT_REL_HWHEEL INPUT_REL_MISC>;
     };
 
     tps43_orientation: tps43_orientation {
@@ -163,63 +212,23 @@
     /*
      * Two fingers left/right scroll horizontally (no base keycodes). Only
      * with Space held (MOUSE_SLOW, layer 1) or LANG2 held (NUM, layer 5) do
-     * they swipe; the left pad switches tabs.
+     * they swipe; the left pad switches tabs and desktops.
      *
      * Physical right swipe is negative after the orientation correction.
      * On layer 1, finger right -> back, left -> forward, as on a MacBook.
-     * While NUM is held, finger right -> the virtual desktop on the left,
-     * left -> the one on the right, as with a three-finger swipe on a
-     * MacBook.
+     * While NUM is held, it is the app switcher on every host: the first
+     * swipe sends Tab with the switcher's modifier (Cmd, or Alt on Windows)
+     * and keeps the modifier pressed until the finger lifts; each further
+     * swipe in the same touch moves the selection, finger left -> right
+     * (Tab), right -> left (Shift+Tab). Lifting the finger switches to the
+     * selected app, so apps further back than the last one are reached.
      *
      * macOS ignores the Browser Back/Forward keys, so the Mac profile sends
      * Cmd+[ and Cmd+], which go back and forward in Safari, Chrome and
-     * Finder. The Windows profiles use tps43_touch_swipe_win instead, and
-     * the iPad tps43_touch_swipe_ipad.
+     * Finder. The Windows profiles use tps43_touch_swipe_win instead. The
+     * iPad takes these Mac keys, so the right pad has no iPad chain.
      */
     tps43_touch_swipe: tps43_touch_swipe {
-        compatible = "zmk,input-processor-touch-swipe";
-        #input-processor-cells = <0>;
-        hwheel-code = <INPUT_REL_HWHEEL>;
-        wheel-code = <INPUT_REL_WHEEL>;
-        touch-code = <INPUT_BTN_TOUCH>;
-        threshold = <8>;
-        axis-ratio = <2>;
-        override-layer = <1>;
-        override-left-keycode = <LG(LBKT)>;
-        override-right-keycode = <LG(RBKT)>;
-        /* Ctrl+Left/Right moves between Spaces on macOS. */
-        second-override-layers = <5>;
-        second-override-left-keycode = <LC(LEFT_ARROW)>;
-        second-override-right-keycode = <LC(RIGHT_ARROW)>;
-    };
-
-    /* tps43_touch_swipe for Windows, where Browser Back/Forward work. */
-    tps43_touch_swipe_win: tps43_touch_swipe_win {
-        compatible = "zmk,input-processor-touch-swipe";
-        #input-processor-cells = <0>;
-        hwheel-code = <INPUT_REL_HWHEEL>;
-        wheel-code = <INPUT_REL_WHEEL>;
-        touch-code = <INPUT_BTN_TOUCH>;
-        threshold = <8>;
-        axis-ratio = <2>;
-        override-layer = <1>;
-        override-left-keycode = <C_AC_BACK>;
-        override-right-keycode = <C_AC_FORWARD>;
-        /* Win+Ctrl+Left/Right moves between virtual desktops on Windows. */
-        second-override-layers = <5>;
-        second-override-left-keycode = <LG(LC(LEFT_ARROW))>;
-        second-override-right-keycode = <LG(LC(RIGHT_ARROW))>;
-    };
-
-    /*
-     * tps43_touch_swipe for the iPad, which has no desktops: scrolling and
-     * Back/Forward as on the Mac. While NUM is held, the first swipe opens the app
-     * switcher (Cmd+Tab) and keeps Cmd pressed until the finger lifts; each
-     * further swipe in the same touch moves the selection, finger left ->
-     * right (Tab), right -> left (Shift+Tab). Lifting the finger switches to
-     * the selected app, so apps further back than the last one are reached.
-     */
-    tps43_touch_swipe_ipad: tps43_touch_swipe_ipad {
         compatible = "zmk,input-processor-touch-swipe";
         #input-processor-cells = <0>;
         hwheel-code = <INPUT_REL_HWHEEL>;
@@ -235,6 +244,26 @@
         second-override-right-keycode = <TAB>;
         second-override-hold-keycode = <LEFT_GUI>;
         /* Travel per further app; the first swipe needs only threshold. */
+        second-override-repeat-threshold = <24>;
+    };
+
+    /* tps43_touch_swipe for Windows, where Browser Back/Forward work. */
+    tps43_touch_swipe_win: tps43_touch_swipe_win {
+        compatible = "zmk,input-processor-touch-swipe";
+        #input-processor-cells = <0>;
+        hwheel-code = <INPUT_REL_HWHEEL>;
+        wheel-code = <INPUT_REL_WHEEL>;
+        touch-code = <INPUT_BTN_TOUCH>;
+        threshold = <8>;
+        axis-ratio = <2>;
+        override-layer = <1>;
+        override-left-keycode = <C_AC_BACK>;
+        override-right-keycode = <C_AC_FORWARD>;
+        /* Alt+Tab is the app switcher on Windows. */
+        second-override-layers = <5>;
+        second-override-left-keycode = <LS(TAB)>;
+        second-override-right-keycode = <TAB>;
+        second-override-hold-keycode = <LEFT_ALT>;
         second-override-repeat-threshold = <24>;
     };
 
@@ -307,12 +336,6 @@
         windows_layers {
             layers = <2>;
             input-processors = RIGHT_PAD_PROCESSORS(&tps43_touch_swipe_win, &tps43_pinch_zoom_win);
-        };
-
-        /* IPAD (layer 4), the same way. */
-        ipad_layer {
-            layers = <4>;
-            input-processors = RIGHT_PAD_PROCESSORS(&tps43_touch_swipe_ipad, &tps43_pinch_zoom);
         };
     };
 };

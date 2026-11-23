@@ -70,3 +70,9 @@ properties:
     description: |
       Horizontal travel per extra key while second-override-hold-keycode is
       held. 0 uses threshold.
+  pass-swipe-axis:
+    type: boolean
+    description: >-
+      Let the swipe axis through instead of suppressing it, so that a second
+      touch-swipe on the other axis later in the chain sees both axes for
+      its axis-ratio check. Something after that must drop this axis.
