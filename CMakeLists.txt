@@ -14,6 +14,12 @@ if(CONFIG_ZMK_BLE AND CONFIG_SETTINGS AND ((NOT CONFIG_ZMK_SPLIT) OR CONFIG_ZMK_
   target_sources(app PRIVATE ${CMAKE_CURRENT_LIST_DIR}/src/profile_layers.c)
 endif()
 
+# Zoom keys from a pinch on the right pad (tps43_pinch_zoom in the overlay).
+# Input processors run on the central.
+if((NOT CONFIG_ZMK_SPLIT) OR CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
+  target_sources(app PRIVATE ${CMAKE_CURRENT_LIST_DIR}/src/input_processor_pinch_zoom.c)
+endif()
+
 # Turns the RGB LED off in soft off, which the rgbled widget leaves lit.
 if(CONFIG_ZMK_PM_SOFT_OFF AND CONFIG_RGBLED_WIDGET)
   target_sources(app PRIVATE ${CMAKE_CURRENT_LIST_DIR}/src/soft_off_leds.c)

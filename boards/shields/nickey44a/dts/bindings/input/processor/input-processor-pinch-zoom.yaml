@@ -1,0 +1,31 @@
+# Implemented in src/input_processor_pinch_zoom.c.
+description: |
+  Turns a trackpad's pinch amount into zoom keys: in-keycode for each
+  threshold of spreading the fingers, out-keycode for each threshold of
+  closing them. Drops cursor movement for the rest of a touch that pinched.
+
+compatible: "zmk,input-processor-pinch-zoom"
+
+include: ip_zero_param.yaml
+
+properties:
+  zoom-code:
+    type: int
+    default: 0x09
+    description: Event code of the pinch amount. The TPS43 driver uses INPUT_REL_MISC.
+  touch-code:
+    type: int
+    required: true
+    description: Key event code for touch down and up, such as INPUT_BTN_TOUCH.
+  threshold:
+    type: int
+    required: true
+    description: Pinch amount per zoom key.
+  in-keycode:
+    type: int
+    required: true
+    description: ZMK keycode for spreading the fingers (zoom in).
+  out-keycode:
+    type: int
+    required: true
+    description: ZMK keycode for closing the fingers (zoom out).

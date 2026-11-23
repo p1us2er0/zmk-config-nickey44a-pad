@@ -51,6 +51,7 @@ FWだけをビルドして書き込む。左手側のFWと`nickey44a_l.overlay`�
 | 2本指でタップ | 中クリック | 右クリック |
 | 2本指で上下に動かす | 上へ：右のタブ／下へ：左のタブ | 縦スクロール |
 | 2本指で左右に動かす | 水平スクロール | 右スワイプ：戻る／左スワイプ：進む |
+| 2本指でピンチ | - | 広げる：拡大／縮める：縮小（キーを段階的に送る） |
 | 縦スクロール後に指を離す | 慣性処理なし | 慣性スクロール |
 | Layer 1で1本指移動 | - | Snipe（移動量を通常の2/3に抑える） |
 | Layer 1で2本指左右スワイプ | 水平スクロール | 右スワイプ：左のタブ／左スワイプ：右のタブ |
@@ -96,7 +97,7 @@ iPadには仮想デスクトップがないので、IPADのレイヤーが有効
 ```text
 左TPS43 → 左input-splitの標準processors → BLE split (reg=0)
         → 右input-split proxy (reg=0) → 左専用input-listenerのorientation/tab swipe/横スクロール → 共通HID
-右TPS43 → 右input-listener → Snipe → temp layer/orientation/scroll方向/swipe（Mac用かWindows用）/inertia → 共通HID
+右TPS43 → 右input-listener → Snipe → temp layer/orientation/scroll方向/pinch/swipe（Mac用かWindows用かiPad用）/inertia → 共通HID
 ```
 
 左のprocessor順序は次の通り。1〜4はBLE転送前（左手側のFW）、5〜7は

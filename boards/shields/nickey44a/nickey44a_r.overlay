@@ -239,6 +239,32 @@
         second-override-repeat-threshold = <24>;
     };
 
+    /*
+     * Pinch on the right pad (`zoom;` on the tps43 node): spreading the
+     * fingers zooms in and closing them zooms out, one key per threshold.
+     * A whole pinch measured 10 to 20 on 2026-11-24, so about 2 or 3 steps.
+     * The pad is a mouse to the host, which has no pinch, so these are keys.
+     * Mac and iPad: Cmd+= / Cmd+-. Windows: Ctrl and the keypad + / -,
+     * which are the same keys on US and JIS layouts.
+     */
+    tps43_pinch_zoom: tps43_pinch_zoom {
+        compatible = "zmk,input-processor-pinch-zoom";
+        #input-processor-cells = <0>;
+        touch-code = <INPUT_BTN_TOUCH>;
+        threshold = <6>;
+        in-keycode = <LG(EQUAL)>;
+        out-keycode = <LG(MINUS)>;
+    };
+
+    tps43_pinch_zoom_win: tps43_pinch_zoom_win {
+        compatible = "zmk,input-processor-pinch-zoom";
+        #input-processor-cells = <0>;
+        touch-code = <INPUT_BTN_TOUCH>;
+        threshold = <6>;
+        in-keycode = <LC(KP_PLUS)>;
+        out-keycode = <LC(KP_MINUS)>;
+    };
+
     tps43_touch_inertia: tps43_touch_inertia {
         compatible = "zmk,input-processor-touch-inertia";
         #input-processor-cells = <0>;
@@ -254,17 +280,17 @@
 
 /*
  * Enter AUTO_MOUSE (layer 8 in config/nickey44a.keymap) for 800 ms, as on
- * tomkey, then orient the pad and recognize swipes.
+ * tomkey, then orient the pad and recognize pinches and swipes.
  */
-#define RIGHT_PAD_PROCESSORS(swipe)                                                \
+#define RIGHT_PAD_PROCESSORS(swipe, pinch)                                         \
     <&zip_temp_layer 8 800>, <&tps43_orientation RIGHT_PAD_ORIENTATION>,          \
-    <&tps43_scroll_direction INPUT_TRANSFORM_Y_INVERT>, <swipe>,                  \
+    <&tps43_scroll_direction INPUT_TRANSFORM_Y_INVERT>, <pinch>, <swipe>,         \
     <&tps43_touch_inertia>
 
     tps43_listener: tps43_listener {
         compatible = "zmk,input-listener";
         device = <&tps43>;
-        input-processors = RIGHT_PAD_PROCESSORS(&tps43_touch_swipe);
+        input-processors = RIGHT_PAD_PROCESSORS(&tps43_touch_swipe, &tps43_pinch_zoom);
 
         snipe_layer {
             layers = <1>;
@@ -279,13 +305,13 @@
          */
         windows_layers {
             layers = <2>;
-            input-processors = RIGHT_PAD_PROCESSORS(&tps43_touch_swipe_win);
+            input-processors = RIGHT_PAD_PROCESSORS(&tps43_touch_swipe_win, &tps43_pinch_zoom_win);
         };
 
         /* IPAD (layer 4), the same way. */
         ipad_layer {
             layers = <4>;
-            input-processors = RIGHT_PAD_PROCESSORS(&tps43_touch_swipe_ipad);
+            input-processors = RIGHT_PAD_PROCESSORS(&tps43_touch_swipe_ipad, &tps43_pinch_zoom);
         };
     };
 };
@@ -309,6 +335,8 @@
         single-tap;
         two-finger-tap;
         scroll;
+        /* Pinch, reported as INPUT_REL_MISC for tps43_pinch_zoom. */
+        zoom;
         /* The listener swaps axes, so driver X controls host vertical scrolling. */
         invert-scroll-y;
 
