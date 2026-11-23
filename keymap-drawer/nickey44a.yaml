@@ -278,7 +278,7 @@ layers:
   - Reset
   - Boot
   - {t: BT0 Mac, s: 2x kbd only}
-  - BT1 iPad
+  - {t: BT1 Mac, s: no monitor}
   - BT2 iPad
   - {t: BT3 Win, s: 2x kbd only}
   - {t: BT4 Win JIS, s: 2x kbd only}
