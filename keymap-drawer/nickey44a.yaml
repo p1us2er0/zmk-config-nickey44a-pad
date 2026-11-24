@@ -147,7 +147,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: ;, h: FUNCTION, s: ''''}
+  - {t: ;, h: FUNCTION, s: ':'}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -179,7 +179,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: '-', h: LEFT SHIFT, s: Sft+INT1}
+  - {t: '-', h: LEFT SHIFT, s: _}
   IPAD:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}

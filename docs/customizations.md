@@ -39,7 +39,8 @@ ZMK Studioは使わないので、右手のビルドから外した（キーマ�
 ## キーマップ
 
 tomkeyのレイヤー、コンボ、マクロ、behaviorを移植した。今のキーマップは
-READMEの図（`keymap-drawer/nickey44a.svg`）で見られる。
+READMEの図（`keymap-drawer/nickey44a.svg`）で見られる。MOUSE_SLOWとIPADは、
+キーを変えずトラックパッドの動きだけを変えるので、図には入れていない。
 
 ### レイヤー
 
@@ -151,11 +152,12 @@ FUNCTIONを押す `;`（11）と同じ右手だけで押せる。
 
 ```sh
 uvx --from keymap-drawer keymap -c keymap_drawer.config.yaml parse -z config/nickey44a.keymap -o keymap-drawer/nickey44a.yaml
-uvx --from keymap-drawer keymap -c keymap_drawer.config.yaml draw -j config/nickey44a.json keymap-drawer/nickey44a.yaml -o keymap-drawer/nickey44a.svg
+uvx --from keymap-drawer keymap -c keymap_drawer.config.yaml draw -j config/nickey44a.json -s MAC WIN WIN_JIS NUM FUNCTION MOUSE AUTO_MOUSE -o keymap-drawer/nickey44a.svg keymap-drawer/nickey44a.yaml
 ```
 
 独自のbehaviorを図でどう表示するかは、`keymap_drawer.config.yaml` の
-`raw_binding_map` で決める。
+`raw_binding_map` で決める。図に入れるレイヤー（`-s`）は、GitHub Actionsで
+図を作る `.github/workflows/draw.yml` の `draw_args` とそろえる。
 
 ## トラックパッド
 
