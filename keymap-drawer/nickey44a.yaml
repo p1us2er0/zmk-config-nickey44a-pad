@@ -343,9 +343,9 @@ layers:
   - {t: ▽, type: trans}
   - F11
   - F12
-  - {t: Screenshot, s: per OS}
-  - {t: Battery, s: LED}
   - {t: ▽, type: trans}
+  - {t: Battery, s: LED}
+  - {t: Screenshot, s: per OS}
   - ''
   - ''
   - {t: ▽, type: trans}
@@ -483,9 +483,9 @@ layers:
   - ''
   - ''
   - ''
-  - ''
-  - ''
   - BT CLR
+  - ''
+  - ''
   - ''
   - ''
   - Boot
