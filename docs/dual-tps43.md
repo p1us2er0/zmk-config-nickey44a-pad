@@ -113,7 +113,7 @@ ZMKのinput-listenerは、レイヤーで切り替えた処理（`windows_layers
 ```text
 左TPS43 → 左input-splitの標準processors → BLE split (reg=0)
         → 右input-split proxy (reg=0) → 左専用input-listenerのorientation/tab swipe/desktop swipe（Mac用かWindows用、iPad・Androidはなし）/上下軸の破棄 → 共通HID
-右TPS43 → 右input-listener → Snipe → temp layer/orientation/scroll方向/pinch/swipe（Mac用かWindows用。iPadはMac用、AndroidはWindows用）/inertia → 共通HID
+右TPS43 → 右input-listener → Snipe → temp layer/scroll scaler（20ピクセルで1段、端数は持ち越し）/orientation/scroll方向/pinch/swipe（Mac用かWindows用。iPadはMac用、AndroidはWindows用）/inertia → 共通HID
 ```
 
 左のprocessor順序は次の通り。1〜4はBLE転送前（左手側のFW）、5〜7は

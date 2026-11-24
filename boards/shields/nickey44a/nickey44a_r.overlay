@@ -321,9 +321,16 @@
  * tomkey, then orient the pad and recognize pinches and swipes. The
  * horizontal scrolling that the swipe lets through is inverted after it,
  * so that the swipe directions above stay as they are.
+ *
+ * The driver reports the scroll in pad pixels (scroll-sensitivity 100), and
+ * zip_scroll_scaler turns 20 of them into one wheel step, keeping the rest
+ * for the next report. The driver's own scaling (scroll-sensitivity 5)
+ * dropped the rest of every report, so a slow scroll lost most of its
+ * movement and a faster one came in uneven steps.
  */
 #define RIGHT_PAD_PROCESSORS(swipe, pinch)                                         \
-    <&zip_temp_layer 9 800>, <&tps43_orientation RIGHT_PAD_ORIENTATION>,          \
+    <&zip_temp_layer 9 800>, <&zip_scroll_scaler 1 20>,                           \
+    <&tps43_orientation RIGHT_PAD_ORIENTATION>,                                   \
     <&tps43_scroll_direction INPUT_TRANSFORM_Y_INVERT>, <pinch>, <swipe>,         \
     <&tps43_scroll_direction INPUT_TRANSFORM_X_INVERT>, <&tps43_touch_inertia>
 
@@ -377,7 +384,8 @@
         filter-settings = <0x0B>;
         filter-dynamic-bottom = <5>;
         sensitivity = <100>;
-        scroll-sensitivity = <5>;
+        /* Pixels as they are: zip_scroll_scaler in RIGHT_PAD_PROCESSORS scales them. */
+        scroll-sensitivity = <100>;
         hold-time = <250>;
         enable-power-management;
         /* Controller settings used when the listener's correction was measured. */

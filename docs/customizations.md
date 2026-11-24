@@ -313,6 +313,19 @@ uvx --from keymap-drawer keymap -c keymap_drawer.config.yaml draw -j config/nick
 キーを押したままにして続けて送る `second-override-hold-keycode` と
 `second-override-repeat-threshold` も追加した。
 
+### スクロールの細かさ
+
+右パッドのドライバは、スクロールの量を報告ごとに `scroll-sensitivity`
+（5 = 1/20）で割り、端数を捨てていた。ゆっくり動かすと1回分の動きが20
+ピクセルに届かず、ほとんど進まないうえ、速く動かしても1段ずつの進み方が
+不ぞろいになる。そこで `scroll-sensitivity` を100（ピクセルのまま）にし、
+右パッドの処理の最初に `zip_scroll_scaler 1 20` を入れた。20ピクセルで
+1段にするのは同じで、端数は次の報告に持ち越す。
+
+1段ずつ進むこと自体は変わらない（ホイール1段でOSが数行ずつ動かす）。
+Windowsでは、マウスの設定の「一度にスクロールする行数」を減らすと、
+1段の量が小さくなる。
+
 ### ピンチで拡大・縮小
 
 右パッドで2本指を広げると拡大、縮めると縮小のキーを送る。
