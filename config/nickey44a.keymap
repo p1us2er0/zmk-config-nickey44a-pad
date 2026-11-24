@@ -241,7 +241,7 @@
 
         // Keyboard-only versions: switch the profile but leave the monitor
         // where it is (no F18/F19). BT1 uses &bt_mac_kbd on a single tap: it
-        // is a second Mac without a monitor for now.
+        // is a Mac without the monitor.
         bt_mac_kbd: bt_mac_kbd {
             compatible = "zmk,behavior-macro-one-param";
             #binding-cells = <1>;
