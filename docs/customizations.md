@@ -15,8 +15,9 @@ scripts/build.sh nickey44a_l   # 左手
 scripts/build.sh               # build.yaml のすべて
 ```
 
-書き込むときは、XIAOのリセットボタンを2回押すか、FUNCTION_BTレイヤーの
-Bootキー（下の「Reset と Boot」）でブートモードにし、表示された
+書き込むときは、XIAOのリセットボタンを2回押すか、SYSTEMレイヤーの
+Bootキー（`;` とLANG2を押したまま外側の下。下の「Reset と Boot」）で
+ブートモードにし、表示された
 `XIAO-BOOT` に `.uf2` をコピーする。
 
 `build.yaml` の `snippet` や `cmake-args` を消したときは、ビルド用の
@@ -385,7 +386,7 @@ WINのレイヤーの処理では入力をそのまま使ってしまう（2026-
 - 電源を入れたときに光る色も、同じ基準。
 - 左手のLEDにも、同時に左手の残量が出る。
 - `;` を押したままだと、2つの表示の間にFUNCTION_BTレイヤーの色（水色）が
-  挟まる。Qを押したら `;` も離すと見やすい。
+  挟まる。Vを押したら `;` も離すと見やすい。
 - 残量は電池の電圧から推定していて、単4のNi-MH電池向けに合わせてある
   （`boards/shields/nickey44a/nickey44a.dtsi`）。Ni-MHは使っている間の
   電圧の変化が小さいので、目安として見る。
