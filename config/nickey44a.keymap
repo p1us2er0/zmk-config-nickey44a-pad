@@ -15,7 +15,8 @@
  * FUNCTION has the F keys on the left (F1-F5 on the home row, F6-F10
  * below, F11 / F12 above) and the Bluetooth profiles on the right: the
  * first host of each kind on the top row, the second Mac and iPad below
- * the first.
+ * the first. Reset and Boot sit on the outer column of both halves, middle
+ * and bottom, as the right outer top is the FUNCTION key itself.
  *   tomkey inner Ctrl+Space            -> combo F + G
  *   tomkey combo ' + H for `           -> J + K
  *
@@ -470,7 +471,7 @@
         };
 
         /*
-         * Turns both halves off: FUNCTION + left outer top (0), held for 1 s
+         * Turns both halves off: FUNCTION + left top row, inner (5, T), held for 1 s
          * and released. Unlike &soft_off, the left half also waits for the
          * release, which reaches the right half only while the left half is
          * on. No key wakes them, so pressure in a carrying case cannot: turn
@@ -542,6 +543,23 @@
             #binding-cells = <0>;
             bindings = <&kp LG(TAB)>, <&kp LA(TAB)>;
             layers = <LAYER_ANDROID>;
+        };
+
+        // Screenshot, on the top left of FUNCTION: an area with Cmd+Shift+4 on
+        // the Mac and the iPad and with Win+Shift+S on Windows, the whole
+        // screen with Meta+Ctrl+S on Android, which has no key for an area.
+        screenshot: screenshot {
+            compatible = "zmk,behavior-layer-morph";
+            #binding-cells = <0>;
+            bindings = <&screenshot_mw>, <&kp LG(LC(S))>;
+            layers = <LAYER_ANDROID>;
+        };
+
+        screenshot_mw: screenshot_mw {
+            compatible = "zmk,behavior-layer-morph";
+            #binding-cells = <0>;
+            bindings = <&kp LG(LS(N4))>, <&kp LG(LS(S))>;
+            layers = <LAYER_WIN>;
         };
 
         // Combos: comment out (Cmd+/ or Ctrl+/), ` and =.
@@ -731,10 +749,10 @@
 
         FUNCTION {
             bindings = <
-&soft_off_hold  &ind_bat  &kp F11  &kp F12  &sys_reset  &bootloader                                   &td_bt_mac_0   &bt_ipad 1     &bt_android 2  &td_bt_win_3  &td_bt_win_jis_4  &trans
-&trans          &kp F1    &kp F2   &kp F3   &kp F4      &kp F5                                        &bt_mac_kbd 5  &bt_ipad 6     &trans         &trans        &trans            &trans
-&kp LG(LS(S))   &kp F6    &kp F7   &kp F8   &kp F9      &kp F10       &none                   &none   &bootloader    &sys_reset     &trans         &trans        &trans            &bt BT_CLR
-                                           &trans      &trans         &kp LG(LS(NUMBER_4))    &trans  &trans        &trans
+&screenshot     &ind_bat  &kp F11  &kp F12  &trans      &soft_off_hold                                &td_bt_mac_0   &bt_ipad 1     &bt_android 2  &td_bt_win_3  &td_bt_win_jis_4  &trans
+&sys_reset      &kp F1    &kp F2   &kp F3   &kp F4      &kp F5                                        &bt_mac_kbd 5  &bt_ipad 6     &trans         &trans        &trans            &sys_reset
+&bootloader     &kp F6    &kp F7   &kp F8   &kp F9      &kp F10       &none                   &none   &trans         &trans         &bt BT_CLR     &trans        &trans            &bootloader
+                                            &trans      &trans        &trans                  &trans  &trans         &trans
             >;
         };
 

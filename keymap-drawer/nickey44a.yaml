@@ -316,19 +316,19 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   FUNCTION:
-  - {t: Power off, s: hold 1s}
+  - {t: Screenshot, s: per OS}
   - {t: Battery, s: LED}
   - F11
   - F12
-  - Reset
-  - Boot
+  - {t: ▽, type: trans}
+  - {t: Power off, s: hold 1s}
   - {t: BT0 Mac, s: 2x kbd only}
   - BT1 iPad
   - BT2 Android
   - {t: BT3 Win, s: 2x kbd only}
   - {t: BT4 Win JIS, s: 2x kbd only}
   - {type: held}
-  - {t: ▽, type: trans}
+  - Reset
   - F1
   - F2
   - F3
@@ -339,8 +339,8 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - Gui+Sft+S
+  - Reset
+  - Boot
   - F6
   - F7
   - F8
@@ -348,15 +348,15 @@ layers:
   - F10
   - ''
   - ''
-  - Boot
-  - Reset
-  - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - BT CLR
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - Gui+Sft+4
+  - Boot
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
