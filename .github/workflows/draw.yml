@@ -16,4 +16,4 @@ jobs:
       output_folder: "keymap-drawer"
       # MOUSE_SLOW, IPAD and ANDROID only change the trackpads and a few keys,
       # and are left out of the drawing, as in docs/customizations.md.
-      draw_args: "nickey44a:'-s MAC WIN WIN_JIS NUM FUNCTION MOUSE AUTO_MOUSE'"
+      draw_args: "nickey44a:'-s MAC WIN WIN_JIS NUM FUNCTION_BT MOUSE AUTO_MOUSE SYSTEM'"

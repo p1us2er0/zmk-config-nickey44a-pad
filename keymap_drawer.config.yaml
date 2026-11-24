@@ -1,6 +1,6 @@
 # keymap-drawer settings, also used by .github/workflows/draw.yml.
 # Legends for the custom behaviors, which are otherwise drawn as raw bindings.
-# Draw with `-s MAC WIN WIN_JIS NUM FUNCTION MOUSE AUTO_MOUSE`: MOUSE_SLOW, IPAD
+# Draw with `-s MAC WIN WIN_JIS NUM FUNCTION_BT MOUSE AUTO_MOUSE SYSTEM`: MOUSE_SLOW, IPAD
 # and ANDROID only change the trackpads and a few keys, so they would be
 # drawn empty.
 parse_config:
@@ -10,7 +10,7 @@ parse_config:
     "&td_comma_left_parenthesis_jis": {t: ",", s: "2x ("}
     "&td_dot_right_parenthesis_jis": {t: ".", s: "2x )"}
     "&single_quote_jis": {t: "'", s: "\""}
-    "&lt_semi_jis LAYER_FUNCTION 0": {t: ";", s: ":", h: FUNCTION}
+    "&lt_semi_jis LAYER_FUNCTION_BT 0": {t: ";", s: ":", h: FUNCTION_BT}
     "&mt_minus_jis LEFT_SHIFT 0": {t: "-", s: "_", h: LEFT SHIFT}
     "&mkp LCLK": LCLK
     "&mkp RCLK": RCLK

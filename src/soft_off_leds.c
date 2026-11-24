@@ -4,8 +4,8 @@
  * The rgbled widget turns the LED off on ZMK_ACTIVITY_SLEEP, which idle sleep
  * raises but soft off (&soft_off_hold in config/nickey44a.keymap) does not.
  * The nRF52840 keeps its GPIO outputs in System OFF, so the right half's LED
- * stayed lit in the color of the layer active at that moment (FUNCTION:
- * cyan) until the power switch was turned off.
+ * stayed lit in the color of the layer active at that moment (SYSTEM: red)
+ * until the power switch was turned off.
  *
  * zmk_pm_soft_off() and idle sleep suspend every device right before powering
  * off. This device has no hardware of its own: suspending it turns the LEDs

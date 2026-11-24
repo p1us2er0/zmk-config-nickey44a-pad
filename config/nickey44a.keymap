@@ -6,19 +6,23 @@
  * 31 (left of N) are covered by the trackpads and have no switch, so they
  * are &none. 42 keys are left. Moved keys:
  *   tomkey bottom row Cmd / Opt / Ctrl -> left outer column bottom / top / middle
- *   tomkey inner ;/FUNCTION            -> right outer column top (11)
+ *   tomkey inner ;/FUNCTION            -> right outer column top (11), FUNCTION_BT
  *   tomkey inner -/Shift               -> right thumb outer (43)
  *   tomkey inner '                     -> right home row, pinky (22)
  *   tomkey bottom right Del            -> right bottom row, pinky (36)
  *   tomkey pinky F2 / F7               -> right outer column middle / bottom (23 / 37)
- *
- * FUNCTION has the F keys on the left (F1-F5 on the home row, F6-F10
- * below, F11 / F12 above) and the Bluetooth profiles on the right: the
- * first host of each kind on the top row, the second Mac and iPad below
- * the first. Reset and Boot sit on the outer column of both halves, middle
- * and bottom, as the right outer top is the FUNCTION key itself.
  *   tomkey inner Ctrl+Space            -> combo F + G
  *   tomkey combo ' + H for `           -> J + K
+ *
+ * FUNCTION_BT has the F keys on the left (F1-F5 on the top row, F6-F10 on the
+ * home row, then F11, F12, screenshot and battery) and the Bluetooth
+ * profiles on the right: the first host of each kind on the top row, the
+ * second Mac and iPad below the first. Its left outer column stays the
+ * modifiers, so that they work with the F keys in either order. Reset,
+ * Boot, soft off and BT_CLR are on SYSTEM, which is on only while both
+ * FUNCTION_BT and NUM are held (; and LANG2, two hands): Reset and Boot on the
+ * outer column of both halves, middle and bottom, as the right outer top
+ * is the FUNCTION_BT key itself.
  *
  * Layer numbers differ from tomkey. nickey44a_r.overlay refers to layers
  * by number, so keep these in step with it: MOUSE_SLOW (1) slows the right
@@ -26,10 +30,10 @@
  * its two-finger tap into the zoom reset, WIN (2), IPAD (4) and ANDROID (5)
  * pick the host's swipe keys, NUM (6) turns the right pad's swipes into the
  * app switcher, and touching the pad enters AUTO_MOUSE (9). The rgbled
- * colors in nickey44a_r.conf are per layer number too.
+ * colors in nickey44a_r.conf are per layer number too (SYSTEM (10) is red).
  *
  * WIN, WIN_JIS, IPAD and ANDROID are host flags, set by the Bluetooth
- * profile keys on FUNCTION, and at startup for the saved profile by
+ * profile keys on FUNCTION_BT, and at startup for the saved profile by
  * profile_layers below (src/profile_layers.c). WIN is on for both Windows
  * profiles and for Android, whose shortcuts use Ctrl as on Windows. WIN_JIS
  * is on as well for the JIS Windows and only holds the keys whose symbols
@@ -45,7 +49,7 @@
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/pointing.h>
-#include <behaviors/rgbled_widget.dtsi>  // &ind_bat: FUNCTION + Q shows the battery levels
+#include <behaviors/rgbled_widget.dtsi>  // &ind_bat: FUNCTION_BT + V shows the battery levels
 
 #define LAYER_MAC 0
 #define LAYER_MOUSE_SLOW 1
@@ -54,9 +58,10 @@
 #define LAYER_IPAD 4
 #define LAYER_ANDROID 5
 #define LAYER_NUM 6
-#define LAYER_FUNCTION 7
+#define LAYER_FUNCTION_BT 7
 #define LAYER_MOUSE 8
 #define LAYER_AUTO_MOUSE 9
+#define LAYER_SYSTEM 10
 
 #define ZKHK_JIS                  GRAVE                  // Zenkaku ↔ Hankaku ↔ Kanji (半角 ↔ 全角 ↔ 漢字)
 #define MINUS_JIS                 MINUS                  // -
@@ -189,9 +194,19 @@
         };
     };
 
+    // SYSTEM while both NUM and FUNCTION_BT are held (; and LANG2).
+    conditional_layers {
+        compatible = "zmk,conditional-layers";
+
+        system {
+            if-layers = <LAYER_NUM LAYER_FUNCTION_BT>;
+            then-layer = <LAYER_SYSTEM>;
+        };
+    };
+
     // Host flags by Bluetooth profile (src/profile_layers.c): set at startup
     // for the saved profile and on each profile change. The profile keys on
-    // FUNCTION set the same layers themselves too, because ZMK raises no
+    // FUNCTION_BT set the same layers themselves too, because ZMK raises no
     // event when the active profile is selected again.
     profile_layers {
         compatible = "zmk,profile-layers";
@@ -471,7 +486,7 @@
         };
 
         /*
-         * Turns both halves off: FUNCTION + left top row, inner (5, T), held for 1 s
+         * Turns both halves off: SYSTEM + left outer top (0), held for 1 s
          * and released. Unlike &soft_off, the left half also waits for the
          * release, which reaches the right half only while the left half is
          * on. No key wakes them, so pressure in a carrying case cannot: turn
@@ -545,7 +560,7 @@
             layers = <LAYER_ANDROID>;
         };
 
-        // Screenshot, on the top left of FUNCTION: an area with Cmd+Shift+4 on
+        // Screenshot, on FUNCTION_BT after F12: an area with Cmd+Shift+4 on
         // the Mac and the iPad and with Win+Shift+S on Windows, the whole
         // screen with Meta+Ctrl+S on Android, which has no key for an area.
         screenshot: screenshot {
@@ -672,7 +687,7 @@
 
         MAC {
             bindings = <
-&kp LEFT_ALT      &kp Q             &kp W  &kp E  &kp R                &kp T                                              &kp Y      &kp U                  &kp I                       &kp O                      &kp P             &lt LAYER_FUNCTION SEMI
+&kp LEFT_ALT      &kp Q             &kp W  &kp E  &kp R                &kp T                                              &kp Y      &kp U                  &kp I                       &kp O                      &kp P             &lt LAYER_FUNCTION_BT SEMI
 &kp LEFT_CONTROL  &kp A             &kp S  &kp D  &kp F                &kp G                                              &kp H      &kp J                  &kp K                       &kp L                      &kp SINGLE_QUOTE  &kp F2
 &kp LEFT_GUI      &mt LEFT_SHIFT Z  &kp X  &kp C  &kp V                &kp B      &none                    &none          &kp N      &kp M                  &td_comma_left_parenthesis  &td_dot_right_parenthesis  &kp DELETE        &kp F7
                                                   &lt LAYER_NUM LANG2  &kp SPACE  &lt LAYER_MOUSE LANG1    &kp BACKSPACE  &kp ENTER  &mt RIGHT_SHIFT MINUS
@@ -706,7 +721,7 @@
         // on JIS. The NUM symbols that move are layer morphs on NUM.
         WIN_JIS {
             bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans                    &trans  &trans                      &trans                          &trans                         &trans             &lt_semi_jis LAYER_FUNCTION 0
+&trans  &trans  &trans  &trans  &trans  &trans                    &trans  &trans                      &trans                          &trans                         &trans             &lt_semi_jis LAYER_FUNCTION_BT 0
 &trans  &trans  &trans  &trans  &trans  &trans                    &trans  &trans                      &trans                          &trans                         &single_quote_jis  &trans
 &trans  &trans  &trans  &trans  &trans  &trans  &none     &none   &trans  &trans                      &td_comma_left_parenthesis_jis  &td_dot_right_parenthesis_jis  &trans             &trans
                                 &trans  &trans  &trans    &trans  &trans  &mt_minus_jis LEFT_SHIFT 0
@@ -747,12 +762,12 @@
             >;
         };
 
-        FUNCTION {
+        FUNCTION_BT {
             bindings = <
-&screenshot     &ind_bat  &kp F11  &kp F12  &trans      &soft_off_hold                                &td_bt_mac_0   &bt_ipad 1     &bt_android 2  &td_bt_win_3  &td_bt_win_jis_4  &trans
-&sys_reset      &kp F1    &kp F2   &kp F3   &kp F4      &kp F5                                        &bt_mac_kbd 5  &bt_ipad 6     &trans         &trans        &trans            &sys_reset
-&bootloader     &kp F6    &kp F7   &kp F8   &kp F9      &kp F10       &none                   &none   &trans         &trans         &bt BT_CLR     &trans        &trans            &bootloader
-                                            &trans      &trans        &trans                  &trans  &trans         &trans
+&trans  &kp F1   &kp F2   &kp F3       &kp F4    &kp F5                     &td_bt_mac_0   &bt_ipad 1  &bt_android 2  &td_bt_win_3  &td_bt_win_jis_4  &trans
+&trans  &kp F6   &kp F7   &kp F8       &kp F9    &kp F10                    &bt_mac_kbd 5  &bt_ipad 6  &trans         &trans        &trans            &trans
+&trans  &kp F11  &kp F12  &screenshot  &ind_bat  &trans   &none     &none   &trans         &trans      &trans         &trans        &trans            &trans
+                                       &trans    &trans   &trans    &trans  &trans         &trans
             >;
         };
 
@@ -775,6 +790,19 @@
 &trans  &trans  &trans  &trans  &trans  &trans                                     &trans     &trans     &trans  &trans  &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans                &none        &none   &trans     &trans     &trans  &trans  &trans  &trans
                                 &trans  &mo LAYER_MOUSE_SLOW  &mkp LCLK    &trans  &mkp LCLK  &mkp RCLK
+            >;
+        };
+
+        // Layer 10. Keys that stop or reset the keyboard, kept off FUNCTION_BT so
+        // that the modifiers on its left outer column stay safe: on only
+        // while both ; (FUNCTION_BT) and LANG2 (NUM) are held. Reset and Boot act
+        // on the half they are on.
+        SYSTEM {
+            bindings = <
+&soft_off_hold  &none  &none  &none  &none  &none                    &none  &none  &none       &none  &none  &trans
+&sys_reset      &none  &none  &none  &none  &none                    &none  &none  &none       &none  &none  &sys_reset
+&bootloader     &none  &none  &none  &none  &none  &none     &none   &none  &none  &bt BT_CLR  &none  &none  &bootloader
+                                     &trans &none  &none     &none   &none  &none
             >;
         };
     };

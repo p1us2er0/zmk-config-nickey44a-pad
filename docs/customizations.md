@@ -15,7 +15,7 @@ scripts/build.sh nickey44a_l   # 左手
 scripts/build.sh               # build.yaml のすべて
 ```
 
-書き込むときは、XIAOのリセットボタンを2回押すか、FUNCTIONレイヤーの
+書き込むときは、XIAOのリセットボタンを2回押すか、FUNCTION_BTレイヤーの
 Bootキー（下の「Reset と Boot」）でブートモードにし、表示された
 `XIAO-BOOT` に `.uf2` をコピーする。
 
@@ -53,11 +53,12 @@ READMEの図（`keymap-drawer/nickey44a.svg`）で見られる。MOUSE_SLOW、IP
 | 4 | IPAD | iPadの目印。中身は空 |
 | 5 | ANDROID | Androidの目印。中身は空。WINと一緒に有効になる |
 | 6 | NUM | 数字と記号。左親指のLANG2を長押し |
-| 7 | FUNCTION | Fキー、BTプロファイル、電池残量、電源オフ。`;` を長押し |
+| 7 | FUNCTION_BT | Fキー、BTプロファイル、画面キャプチャ、電池残量。`;` を長押し |
 | 8 | MOUSE | マウス操作。右親指のLANG1を長押し |
 | 9 | AUTO_MOUSE | 右パッドに触れると有効になる |
+| 10 | SYSTEM | Reset、Boot、電源オフ、BT_CLR。`;` とLANG2を両方押している間 |
 
-WIN、WIN_JIS、IPAD、ANDROIDは、つないでいる機器の種類を表す目印で、FUNCTIONの
+WIN、WIN_JIS、IPAD、ANDROIDは、つないでいる機器の種類を表す目印で、FUNCTION_BTの
 BTプロファイルのキーで切り替わる。
 
 | プロファイル | 機器 | 有効になる目印 |
@@ -117,7 +118,7 @@ LEDのレイヤーの色でも使っているので、変えるときは合わ�
 1台のモニターを、Mac（USB-C）とWindows（HDMI）で共用している。BTプロファイルの
 キーで、キーボードと一緒にモニターの入力も切り替える。
 
-| キー（FUNCTION） | 1回押し | 2回押し |
+| キー（FUNCTION_BT） | 1回押し | 2回押し |
 |---|---|---|
 | BT0（Mac） | プロファイルを切り替えてから、F19を送る | キーボードだけ切り替える |
 | BT3 / BT4（Windows） | F18を送ってから、プロファイルを切り替える | キーボードだけ切り替える |
@@ -168,7 +169,7 @@ Nickey44A-PADには、tomkeyにある内側の列と最下段がなく、代わ�
 | キー | Nickey44A-PADでの位置 |
 |---|---|
 | Opt / Ctrl / Cmd | 左外側の上 / 中 / 下 |
-| `;`（長押しでFUNCTION） | 右外側の上（Pの右、11） |
+| `;`（長押しでFUNCTION_BT） | 右外側の上（Pの右、11） |
 | `-`（長押しでShift） | 右親指の外側（43） |
 | `'` | 右ホーム段の小指（Lの右、22） |
 | Del | 右下段の小指（36） |
@@ -211,25 +212,29 @@ Windowsでは行頭 / 行末への移動になる。
 
 ### Reset と Boot
 
-FUNCTIONレイヤーのResetとBootは、押したキーがある側にだけ効く（ZMKの
-仕様）。左右とも外側の列の中と下に、左右対称に置いてある。右手の外側の上は
-FUNCTIONを押す `;`（11）なので使わない。
+ResetとBootは、FUNCTION_BTとは別のSYSTEMレイヤーに置いてある。SYSTEMは、
+`;`（FUNCTION_BT）とLANG2（NUM）を両方押している間だけ有効になる（ZMKの
+conditional layer。押す順はどちらでもよい）。両手を使うので、うっかり
+入らない。SYSTEMの間はLEDが赤くなる。電源オフとBT_CLR（今のプロファイルの
+ペアリングを消す）もSYSTEMにある。
+
+ResetとBootは、押したキーがある側にだけ効く（ZMKの仕様）。左右とも外側の
+列の中と下に、左右対称に置いてある。右手の外側の上は `;`（11）なので
+使わない。BT_CLRは右手の下段の中央（`,` の位置、34）。
 
 | | Reset（再起動） | Boot（ブートモード） |
 |---|---|---|
 | 左手に効く | 左外側の中（12） | 左外側の下（24） |
 | 右手に効く | 右外側の中（23） | 右外側の下（37） |
 
-以前は右手のResetがF10の隣にあり押し間違えやすかったが、Fキーを左手に
-移したので、今は隣にキーがない。
-
-左外側の中と下は、ふだんはCtrlとCmd（Windowsでは WinとCtrl）。Fキーと
-一緒に使うときは、修飾キーを先に押してから `;` を押す。`;` を先に押すと、
-ResetかBootになる。
+FUNCTION_BTの左外側の列は、ふだんの修飾キー（Alt・Ctrl・Cmd。Windowsでは
+Alt・Win・Ctrl）のまま。`Ctrl+F5` や `Alt+F4` は、どの順で押しても打てる。
+以前はFUNCTION_BTに置いていたが、`;` を先に押してから修飾キーを押すと
+ResetやBootになってしまうので、SYSTEMに分けた。
 
 ### 画面キャプチャ
 
-FUNCTIONの左上（位置0）は、つないでいる機器に合わせて画面キャプチャの
+FUNCTION_BTのF12の右（Cの位置、27）は、つないでいる機器に合わせて画面キャプチャの
 キーを送る（`screenshot`。WINとANDROIDを見るlayer morph）。
 
 | 機器 | 送るキー | 撮る範囲 |
@@ -245,7 +250,7 @@ FUNCTIONの左上（位置0）は、つないでいる機器に合わせて画�
 
 ```sh
 uvx --from keymap-drawer keymap -c keymap_drawer.config.yaml parse -z config/nickey44a.keymap -o keymap-drawer/nickey44a.yaml
-uvx --from keymap-drawer keymap -c keymap_drawer.config.yaml draw -j config/nickey44a.json -s MAC WIN WIN_JIS NUM FUNCTION MOUSE AUTO_MOUSE -o keymap-drawer/nickey44a.svg keymap-drawer/nickey44a.yaml
+uvx --from keymap-drawer keymap -c keymap_drawer.config.yaml draw -j config/nickey44a.json -s MAC WIN WIN_JIS NUM FUNCTION_BT MOUSE AUTO_MOUSE SYSTEM -o keymap-drawer/nickey44a.svg keymap-drawer/nickey44a.yaml
 ```
 
 独自のbehaviorを図でどう表示するかは、`keymap_drawer.config.yaml` の
@@ -354,7 +359,7 @@ WINのレイヤーの処理では入力をそのまま使ってしまう（2026-
 
 ### 電池残量の表示
 
-`;`（FUNCTION）を押したままQを押すと、右手のLEDに、右手、左手の順で
+`;`（FUNCTION_BT）を押したままVを押すと、右手のLEDに、右手、左手の順で
 電池残量を2秒ずつ色で表示する。
 
 | 色 | 残量 |
@@ -366,7 +371,7 @@ WINのレイヤーの処理では入力をそのまま使ってしまう（2026-
 
 - 電源を入れたときに光る色も、同じ基準。
 - 左手のLEDにも、同時に左手の残量が出る。
-- `;` を押したままだと、2つの表示の間にFUNCTIONレイヤーの色（水色）が
+- `;` を押したままだと、2つの表示の間にFUNCTION_BTレイヤーの色（水色）が
   挟まる。Qを押したら `;` も離すと見やすい。
 - 残量は電池の電圧から推定していて、単4のNi-MH電池向けに合わせてある
   （`boards/shields/nickey44a/nickey44a.dtsi`）。Ni-MHは使っている間の
@@ -376,7 +381,7 @@ WINのレイヤーの処理では入力をそのまま使ってしまう（2026-
 
 ### ソフトオフ
 
-- **切る**：`;`（FUNCTION）を押したまま、Tの位置（位置5）を
+- **切る**：`;` とLANG2を押したまま（SYSTEM）、左外側の上（位置0）を
   1秒以上押してから離す。左右とも切れ、LEDも消える。
 - **起こす**：左右それぞれの電源スイッチを、切ってから入れ直す。
   キーを押しても起きない。
@@ -431,8 +436,10 @@ LEDは、そのときのレイヤーの色で光ったまま残っていた。�
 - iPadモード（BT1、BT6）：MOUSEのC / V、W / R、Q / A、コンボのコメントアウトと
   戻る / 進む、LEDが消えたままのこと。
 - BTプロファイルを7つに増やしたあとも、BT0〜BT4のペアリングが残っていること。
-- FUNCTIONの左上の画面キャプチャが、Mac・iPad・Windows・Androidで撮れること。
-- 外側の列のReset / Bootが、左右それぞれ押した側にだけ効くこと。
+- FUNCTION_BTの画面キャプチャが、Mac・iPad・Windows・Androidで撮れること。
+- `;` とLANG2を両方押すとLEDが赤くなり、外側の列のReset / Bootが、左右
+  それぞれ押した側にだけ効くこと。FUNCTION_BTで、`;` を先に押してから
+  Ctrlを押しても、`Ctrl+F5` などが打てること。
   BT5（2台目のMac）とBT6（2台目のiPad）がペアリングできること。
 - Androidモード（BT2）：Ctrlのショートカット（左外側の下がCtrl）、MOUSEの
   C / V（ホーム画面と直前のアプリ）とW / R、コンボのコメントアウトと戻る / 進む、Spaceを押しながらのスワイプで戻る /
