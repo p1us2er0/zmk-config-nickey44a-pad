@@ -14,7 +14,7 @@ parse_config:
     "&mkp LCLK": LCLK
     "&mkp RCLK": RCLK
     "&td_bt_mac_0": {t: BT0 Mac, s: "2x kbd only"}
-    "&bt_mac_kbd 1": {t: BT1 Mac, s: "no monitor"}
+    "&bt_ipad 1": BT1 iPad
     "&bt_ipad 2": BT2 iPad
     "&td_bt_win_3": {t: BT3 Win, s: "2x kbd only"}
     "&td_bt_win_jis_4": {t: BT4 Win JIS, s: "2x kbd only"}

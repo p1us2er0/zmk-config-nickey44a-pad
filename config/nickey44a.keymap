@@ -188,7 +188,12 @@
         compatible = "zmk,profile-layers";
         layers = <LAYER_WIN LAYER_WIN_JIS LAYER_IPAD>;
 
-        ipad {
+        ipad_1 {
+            profile = <1>;
+            layers = <LAYER_IPAD>;
+        };
+
+        ipad_2 {
             profile = <2>;
             layers = <LAYER_IPAD>;
         };
@@ -240,8 +245,7 @@
         };
 
         // Keyboard-only versions: switch the profile but leave the monitor
-        // where it is (no F18/F19). BT1 uses &bt_mac_kbd on a single tap: it
-        // is a Mac without the monitor.
+        // where it is (no F18/F19).
         bt_mac_kbd: bt_mac_kbd {
             compatible = "zmk,behavior-macro-one-param";
             #binding-cells = <1>;
@@ -651,7 +655,7 @@
             >;
         };
 
-        // Layer 4. Only a flag for the iPad (BT2), like WIN for Windows:
+        // Layer 4. Only a flag for the iPads (BT1, BT2), like WIN for Windows:
         // nickey44a_r.overlay and the MOUSE keys C and V check it. Set with
         // the other host flags (profile_layers and the profile keys).
         IPAD {
@@ -674,7 +678,7 @@
 
         FUNCTION {
             bindings = <
-&soft_off_hold  &ind_bat  &trans   &trans  &sys_reset  &bootloader                                    &td_bt_mac_0  &bt_mac_kbd 1  &bt_ipad 2  &td_bt_win_3  &td_bt_win_jis_4  &trans
+&soft_off_hold  &ind_bat  &trans   &trans  &sys_reset  &bootloader                                    &td_bt_mac_0  &bt_ipad 1     &bt_ipad 2  &td_bt_win_3  &td_bt_win_jis_4  &trans
 &trans          &kp F1    &kp F2   &kp F3  &kp F4      &kp F5                                         &kp F6        &kp F7         &kp F8      &kp F9        &kp F10           &trans
 &trans          &kp F11   &kp F12  &trans  &trans      &kp LG(LS(S))  &none                   &none   &bootloader   &sys_reset     &mac_us     &win_us       &win_jis          &bt BT_CLR
                                            &trans      &trans         &kp LG(LS(NUMBER_4))    &trans  &trans        &trans
