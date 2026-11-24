@@ -91,8 +91,8 @@
 
     /*
      * Left pad: two-finger up/down switches tabs, two-finger left/right
-     * moves between virtual desktops (Mac and Windows; nothing on the iPad,
-     * which has none). Neither axis scrolls. The tab swipe lets its axis
+     * moves between virtual desktops (Mac and Windows; nothing on the iPad
+     * and Android, which have none). Neither axis scrolls. The tab swipe lets its axis
      * through so that the desktop swipe sees both axes too, and
      * left_tps43_drop_tab_axis drops it at the end. Without the desktop
      * swipe, REL_DIAL reaches the listener, which ignores it.
@@ -106,17 +106,20 @@
         device = <&left_tps43_split>;
         input-processors = LEFT_PAD_PROCESSORS(&left_tps43_desktop_swipe);
 
+        /*
+         * IPAD (layer 4) or ANDROID (layer 5): tabs only. First, because
+         * WIN is on for Android too and the first matching chain runs.
+         */
+        mobile_layers {
+            layers = <4 5>;
+            input-processors = <&left_tps43_orientation LEFT_PAD_ORIENTATION>,
+                               <&left_tps43_tab_swipe>, <&left_tps43_drop_tab_axis>;
+        };
+
         /* WIN (layer 2), as on the right pad. */
         windows_layers {
             layers = <2>;
             input-processors = LEFT_PAD_PROCESSORS(&left_tps43_desktop_swipe_win);
-        };
-
-        /* IPAD (layer 4): tabs only. */
-        ipad_layer {
-            layers = <4>;
-            input-processors = <&left_tps43_orientation LEFT_PAD_ORIENTATION>,
-                               <&left_tps43_tab_swipe>, <&left_tps43_drop_tab_axis>;
         };
     };
 
@@ -211,13 +214,14 @@
 
     /*
      * Two fingers left/right scroll horizontally (no base keycodes). Only
-     * with Space held (MOUSE_SLOW, layer 1) or LANG2 held (NUM, layer 5) do
+     * with Space held (MOUSE_SLOW, layer 1) or LANG2 held (NUM, layer 6) do
      * they swipe; the left pad switches tabs and desktops.
      *
      * Physical right swipe is negative after the orientation correction.
      * On layer 1, finger right -> back, left -> forward, as on a MacBook.
      * While NUM is held, it is the app switcher on every host: the first
-     * swipe sends Tab with the switcher's modifier (Cmd, or Alt on Windows)
+     * swipe sends Tab with the switcher's modifier (Cmd, or Alt on Windows
+     * and Android)
      * and keeps the modifier pressed until the finger lifts; each further
      * swipe in the same touch moves the selection, finger left -> right
      * (Tab), right -> left (Shift+Tab). Lifting the finger switches to the
@@ -225,8 +229,9 @@
      *
      * macOS ignores the Browser Back/Forward keys, so the Mac profile sends
      * Cmd+[ and Cmd+], which go back and forward in Safari, Chrome and
-     * Finder. The Windows profiles use tps43_touch_swipe_win instead. The
-     * iPad takes these Mac keys, so the right pad has no iPad chain.
+     * Finder. The Windows profiles and Android use tps43_touch_swipe_win
+     * instead. The iPad takes these Mac keys, so the right pad has no iPad
+     * chain.
      */
     tps43_touch_swipe: tps43_touch_swipe {
         compatible = "zmk,input-processor-touch-swipe";
@@ -239,7 +244,7 @@
         override-layer = <1>;
         override-left-keycode = <LG(LBKT)>;
         override-right-keycode = <LG(RBKT)>;
-        second-override-layers = <5>;
+        second-override-layers = <6>;
         second-override-left-keycode = <LS(TAB)>;
         second-override-right-keycode = <TAB>;
         second-override-hold-keycode = <LEFT_GUI>;
@@ -260,7 +265,7 @@
         override-left-keycode = <C_AC_BACK>;
         override-right-keycode = <C_AC_FORWARD>;
         /* Alt+Tab is the app switcher on Windows. */
-        second-override-layers = <5>;
+        second-override-layers = <6>;
         second-override-left-keycode = <LS(TAB)>;
         second-override-right-keycode = <TAB>;
         second-override-hold-keycode = <LEFT_ALT>;
@@ -312,13 +317,13 @@
     };
 
 /*
- * Enter AUTO_MOUSE (layer 8 in config/nickey44a.keymap) for 800 ms, as on
+ * Enter AUTO_MOUSE (layer 9 in config/nickey44a.keymap) for 800 ms, as on
  * tomkey, then orient the pad and recognize pinches and swipes. The
  * horizontal scrolling that the swipe lets through is inverted after it,
  * so that the swipe directions above stay as they are.
  */
 #define RIGHT_PAD_PROCESSORS(swipe, pinch)                                         \
-    <&zip_temp_layer 8 800>, <&tps43_orientation RIGHT_PAD_ORIENTATION>,          \
+    <&zip_temp_layer 9 800>, <&tps43_orientation RIGHT_PAD_ORIENTATION>,          \
     <&tps43_scroll_direction INPUT_TRANSFORM_Y_INVERT>, <pinch>, <swipe>,         \
     <&tps43_scroll_direction INPUT_TRANSFORM_X_INVERT>, <&tps43_touch_inertia>
 
@@ -335,8 +340,8 @@
 
         /*
          * WIN (layer 2 in config/nickey44a.keymap), on for both Windows
-         * profiles. Without process-next, this chain runs instead of the one
-         * above.
+         * profiles and for Android. Without process-next, this chain runs
+         * instead of the one above.
          */
         windows_layers {
             layers = <2>;

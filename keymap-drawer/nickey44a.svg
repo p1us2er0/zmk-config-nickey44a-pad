@@ -1074,7 +1074,7 @@ path.combo {
 <g transform="translate(644, 28)" class="key keypos-8">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
 <text x="0" y="0" class="key tap">
-<tspan x="0" dy="-0.6em">BT2</tspan><tspan x="0" dy="1.2em">iPad</tspan>
+<tspan x="0" dy="-0.6em">BT2</tspan><tspan x="0" dy="1.2em">Android</tspan>
 </text>
 </g>
 <g transform="translate(700, 28)" class="key keypos-9">
@@ -1381,14 +1381,14 @@ path.combo {
 <text x="0" y="0" class="key tap">
 <tspan x="0" dy="-0.3em">Desk</tspan><tspan x="0" dy="1.2em">←</tspan>
 </text>
-<text x="0" y="-24" class="key shifted"><tspan style="font-size: 78%">iPad Home</tspan></text>
+<text x="0" y="-24" class="key shifted"><tspan style="font-size: 64%">mobile Home</tspan></text>
 </g>
 <g transform="translate(252, 140)" class="key keypos-28">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
 <text x="0" y="0" class="key tap">
 <tspan x="0" dy="-0.3em">Desk</tspan><tspan x="0" dy="1.2em">→</tspan>
 </text>
-<text x="0" y="-24" class="key shifted"><tspan style="font-size: 64%">iPad last …</tspan></text>
+<text x="0" y="-24" class="key shifted"><tspan style="font-size: 64%">mobile las…</tspan></text>
 </g>
 <g transform="translate(308, 140)" class="key keypos-29">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>

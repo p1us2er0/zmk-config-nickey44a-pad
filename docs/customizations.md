@@ -39,7 +39,7 @@ ZMK Studioは使わないので、右手のビルドから外した（キーマ�
 ## キーマップ
 
 tomkeyのレイヤー、コンボ、マクロ、behaviorを移植した。今のキーマップは
-READMEの図（`keymap-drawer/nickey44a.svg`）で見られる。MOUSE_SLOWとIPADは、
+READMEの図（`keymap-drawer/nickey44a.svg`）で見られる。MOUSE_SLOW、IPAD、ANDROIDは、
 キーを変えずトラックパッドの動きだけを変えるので、図には入れていない。
 
 ### レイヤー
@@ -51,18 +51,20 @@ READMEの図（`keymap-drawer/nickey44a.svg`）で見られる。MOUSE_SLOWとIP
 | 2 | WIN | Windows用。MACに重ねて、左外側の中と下をWinとCtrlにする |
 | 3 | WIN_JIS | Windows（JIS）用。WINと一緒に有効になり、JISで記号が違う5キーだけを持つ |
 | 4 | IPAD | iPadの目印。中身は空 |
-| 5 | NUM | 数字と記号。左親指のLANG2を長押し |
-| 6 | FUNCTION | Fキー、BTプロファイル、OSの切り替え、電池残量、電源オフ。`;` を長押し |
-| 7 | MOUSE | マウス操作。右親指のLANG1を長押し |
-| 8 | AUTO_MOUSE | 右パッドに触れると有効になる |
+| 5 | ANDROID | Androidの目印。中身は空。WINと一緒に有効になる |
+| 6 | NUM | 数字と記号。左親指のLANG2を長押し |
+| 7 | FUNCTION | Fキー、BTプロファイル、OSの切り替え、電池残量、電源オフ。`;` を長押し |
+| 8 | MOUSE | マウス操作。右親指のLANG1を長押し |
+| 9 | AUTO_MOUSE | 右パッドに触れると有効になる |
 
-WIN、WIN_JIS、IPADは、つないでいる機器の種類を表す目印で、FUNCTIONの
+WIN、WIN_JIS、IPAD、ANDROIDは、つないでいる機器の種類を表す目印で、FUNCTIONの
 BTプロファイルのキーで切り替わる。
 
 | プロファイル | 機器 | 有効になる目印 |
 |---|---|---|
 | BT0 | Mac | なし |
-| BT1、BT2 | iPad | IPAD |
+| BT1 | iPad | IPAD |
+| BT2 | Android | WINとANDROID |
 | BT3 | Windows | WIN |
 | BT4 | Windows（JIS） | WINとWIN_JIS |
 
@@ -70,6 +72,23 @@ JISのWindowsでもWINを有効にするので、WinとCtrlの入れ替えやWin
 ショートカットはWINだけに書けばよく、WIN_JISにはJISで記号が違うキー
 （`;` `'` `,` `.` `-`）だけが残る。NUMより下に置いて、NUMのキーが
 WIN_JISのキーに負けないようにしている。
+
+AndroidのショートカットはWindowsと同じくCtrlを使うので、BT2ではWINも有効に
+する。左外側の下がCtrl、中がMeta（Win）になり、ショートカットのキーも
+Windowsと同じになる。ANDROIDには、Windowsと違うところだけを書く。
+
+- 左パッドの2本指の左右（仮想デスクトップ）：Androidにはないので、何もしない。
+- MOUSEのC / V：ホーム画面（`Meta+H`）と直前のアプリ（`Alt+Tab`）。
+- モニターは切り替えない（F18 / F19を送らない）。
+- LEDは、iPadと同じく消えたままにする。
+
+`Alt+Tab` のアプリの切り替えは、Android 14以降のタブレットで使える。
+Chromeの拡大・縮小（`Ctrl` + テンキーの `+` / `-`、`Ctrl+0`）と、
+LANG1 / LANG2での入力の切り替えは、Androidで効くかをまだ確かめていない。
+入力の切り替えは、コンボのCtrl+Space（F + G）でもできる。
+
+ZMKのコンボは、いちばん上で有効なレイヤーで動くかを決めるので、レイヤーの一覧を
+持つコンボ（コメントアウト、`` ` ``、`=`、戻る / 進む）にはANDROIDも入れている。
 
 目印のレイヤーは、ZMKでは電源を切ると消える。そのため、起動したときに
 保存されているBTプロファイルを見て、目印を戻す（`src/profile_layers.c`、
@@ -90,7 +109,7 @@ LEDのレイヤーの色でも使っているので、変えるときは合わ�
 |---|---|---|
 | BT0（Mac） | プロファイルを切り替えてから、F19を送る | キーボードだけ切り替える |
 | BT3 / BT4（Windows） | F18を送ってから、プロファイルを切り替える | キーボードだけ切り替える |
-| BT1、BT2（iPad） | キーボードだけ切り替える | - |
+| BT1（iPad）、BT2（Android） | キーボードだけ切り替える | - |
 
 - キーボードはF18とF19を送るだけで、切り替えはMac側の常駐プログラム（自作。
   このリポジトリには入れていない）が行う。Windows側には何も入れていない。
@@ -148,18 +167,18 @@ Nickey44A-PADには、tomkeyにある内側の列と最下段がなく、代わ�
 - tomkeyのSCROLLレイヤーとエンコーダーは削除した。スクロールは
   両パッドの2本指で行う。
 
-### MOUSEレイヤーのMac / Windows / iPad切り替え
+### MOUSEレイヤーのMac / Windows / iPad / Android切り替え
 
 MOUSEレイヤー（右親指のLANG1を長押し）のキーのうち、機器によって
-ショートカットが違うものは、どれでも同じ操作になるように、WINか
-IPADが有効かで送るキーを変える。
+ショートカットが違うものは、どれでも同じ操作になるように、WIN、
+IPAD、ANDROIDのどれが有効かで送るキーを変える。
 
-| キー | 操作 | Mac | Windows | iPad |
-|---|---|---|---|---|
-| W / R | 文書の先頭 / 末尾 | `Cmd+↑` / `Cmd+↓` | `Ctrl+Home` / `Ctrl+End` | Macと同じ |
-| C / V | 左 / 右の仮想デスクトップ | `Ctrl+←` / `Ctrl+→` | `Win+Ctrl+←` / `Win+Ctrl+→` | ホーム画面（`Cmd+H`） / 直前のアプリ（`Cmd+Tab`） |
-| Q / A | ページの先頭 / 末尾 | `Home` / `End` | 同じ | 同じ |
-| U / I | 左 / 右のタブ | `Ctrl+Shift+Tab` / `Ctrl+Tab` | 同じ | 同じ |
+| キー | 操作 | Mac | Windows | iPad | Android |
+|---|---|---|---|---|---|
+| W / R | 文書の先頭 / 末尾 | `Cmd+↑` / `Cmd+↓` | `Ctrl+Home` / `Ctrl+End` | Macと同じ | Windowsと同じ |
+| C / V | 左 / 右の仮想デスクトップ | `Ctrl+←` / `Ctrl+→` | `Win+Ctrl+←` / `Win+Ctrl+→` | ホーム画面（`Cmd+H`） / 直前のアプリ（`Cmd+Tab`） | ホーム画面（`Meta+H`） / 直前のアプリ（`Alt+Tab`） |
+| Q / A | ページの先頭 / 末尾 | `Home` / `End` | 同じ | 同じ | 同じ |
+| U / I | 左 / 右のタブ | `Ctrl+Shift+Tab` / `Ctrl+Tab` | 同じ | 同じ | 同じ |
 
 コンボのコメントアウト（D + F）も、Macでは `Cmd+/`、Windowsでは
 `Ctrl+/` を送る。
@@ -213,7 +232,7 @@ uvx --from keymap-drawer keymap -c keymap_drawer.config.yaml draw -j config/nick
   MOUSE_SLOWになる。BackSpaceはそのままBackSpaceで、押すとAUTO_MOUSEを
   抜ける。MOUSEレイヤーの右クリックも同じ位置。
 - 左パッドは、2本指の上下でタブ移動（指を上へで右のタブ）、左右で
-  仮想デスクトップの移動（指を右へで左のデスクトップ。iPadでは何もしない）。
+  仮想デスクトップの移動（指を右へで左のデスクトップ。iPadとAndroidでは何もしない）。
   長押しで左ボタンを押したままにでき、ドラッグに使う。
 
 右パッドの2本指の左右は、普段は横スクロールで、キーを押している間だけ
@@ -223,11 +242,11 @@ uvx --from keymap-drawer keymap -c keymap_drawer.config.yaml draw -j config/nick
 左右は横スクロールだった。タブ移動が左右のパッドで重なっていた）。
 同じ操作がパッドの2か所に出ないようにしている。
 
-| そのときの状態 | Mac | Windows | iPad |
-|---|---|---|---|
-| 通常 | 横スクロール | 同じ | 同じ |
-| MOUSE_SLOW（パッドに触れてSpaceを長押し） | 戻る / 進む（`Cmd+[` / `Cmd+]`） | Browser Back / Forward | Macと同じ |
-| NUM（LANG2を長押し） | アプリスイッチャー（`Cmd+Tab`） | アプリスイッチャー（`Alt+Tab`） | Macと同じ |
+| そのときの状態 | Mac | Windows | iPad | Android |
+|---|---|---|---|---|
+| 通常 | 横スクロール | 同じ | 同じ | 同じ |
+| MOUSE_SLOW（パッドに触れてSpaceを長押し） | 戻る / 進む（`Cmd+[` / `Cmd+]`） | Browser Back / Forward | Macと同じ | Windowsと同じ（Androidの「戻る」「進む」になる） |
+| NUM（LANG2を長押し） | アプリスイッチャー（`Cmd+Tab`） | アプリスイッチャー（`Alt+Tab`） | Macと同じ | Windowsと同じ（Android 14以降のタブレット） |
 
 アプリスイッチャー：LANG2を押しながら2本指で左右に動かすと、`Cmd+Tab`
 （Windowsでは `Alt+Tab`）でアプリスイッチャーが開き、指を置いている間は
@@ -260,10 +279,10 @@ uvx --from keymap-drawer keymap -c keymap_drawer.config.yaml draw -j config/nick
 | 機器 | 拡大（広げる） | 縮小（縮める） |
 |---|---|---|
 | Mac・iPad | `Cmd+=` | `Cmd+-` |
-| Windows（WIN・WIN_JIS） | `Ctrl` + テンキーの `+` | `Ctrl` + テンキーの `-` |
+| Windows（WIN・WIN_JIS）・Android | `Ctrl` + テンキーの `+` | `Ctrl` + テンキーの `-` |
 
 標準の大きさに戻すには、右パッドに触れてからSpaceを長押しし（MOUSE_SLOW）、
-押したまま2本指でタップする。Mac・iPadは `Cmd+0`、Windowsは `Ctrl+0` を
+押したまま2本指でタップする。Mac・iPadは `Cmd+0`、Windows・Androidは `Ctrl+0` を
 送る（`0` はUSとJISで同じキー）。このときは右クリックにならない。Spaceを
 押しながらの右クリックは普通の2本指タップと同じだったので、そこに入れた。
 
@@ -373,9 +392,14 @@ LEDは、そのときのレイヤーの色で光ったまま残っていた。�
   斜めに動かしても、タブとデスクトップが両方切り替わらないこと。
 - LANG2を押したままの右パッドのスワイプで、アプリスイッチャーが動くこと
   （Mac・Windows・iPad）。
-- iPadモード（BT1、BT2）：MOUSEのC / V、LEDが消えたままのこと。
+- iPadモード（BT1）：MOUSEのC / V、LEDが消えたままのこと。
+- Androidモード（BT2）：Ctrlのショートカット（左外側の下がCtrl）、MOUSEの
+  C / V（ホーム画面と直前のアプリ）、Spaceを押しながらのスワイプで戻る /
+  進む、LANG2を押しながらのスワイプでアプリスイッチャー、ピンチと大きさの
+  リセット（Chromeで効くか）、LANG1 / LANG2やコンボのCtrl+Spaceでの入力の
+  切り替え、左パッドの左右で何も起きないこと、LEDが消えたままのこと。
 - Windows JISで、NUMの記号とコンボの `` ` `` `=` が正しく出ること。
-- 電源を入れ直したあと、Windows・iPadのプロファイルで目印が戻っていること。
+- 電源を入れ直したあと、Windows・iPad・Androidのプロファイルで目印が戻っていること。
 - 右クリックが右親指の外側（`-`）に移り、BackSpaceが打てること。
 - 右パッドのピンチで、Mac・iPad・Windowsのブラウザが拡大・縮小すること。
   1回のピンチで変わる段数。ピンチのあとにカーソルが飛ばないこと（特に

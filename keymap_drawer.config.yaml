@@ -1,7 +1,8 @@
 # keymap-drawer settings, also used by .github/workflows/draw.yml.
 # Legends for the custom behaviors, which are otherwise drawn as raw bindings.
-# Draw with `-s MAC WIN WIN_JIS NUM FUNCTION MOUSE AUTO_MOUSE`: MOUSE_SLOW and IPAD
-# only change the trackpads, so they would be drawn empty.
+# Draw with `-s MAC WIN WIN_JIS NUM FUNCTION MOUSE AUTO_MOUSE`: MOUSE_SLOW, IPAD
+# and ANDROID only change the trackpads and a few keys, so they would be
+# drawn empty.
 parse_config:
   raw_binding_map:
     "&td_comma_left_parenthesis": {t: ",", s: "2x ("}
@@ -15,7 +16,7 @@ parse_config:
     "&mkp RCLK": RCLK
     "&td_bt_mac_0": {t: BT0 Mac, s: "2x kbd only"}
     "&bt_ipad 1": BT1 iPad
-    "&bt_ipad 2": BT2 iPad
+    "&bt_android 2": BT2 Android
     "&td_bt_win_3": {t: BT3 Win, s: "2x kbd only"}
     "&td_bt_win_jis_4": {t: BT4 Win JIS, s: "2x kbd only"}
     "&mac_us": Mac
@@ -27,8 +28,8 @@ parse_config:
     "&ind_bat": {t: Battery, s: LED}
     "&doc_top": {t: Doc top, s: "Mac/Win"}
     "&doc_bottom": {t: Doc end, s: "Mac/Win"}
-    "&desk_left": {t: "Desk ←", s: "iPad Home"}
-    "&desk_right": {t: "Desk →", s: "iPad last app"}
+    "&desk_left": {t: "Desk ←", s: "mobile Home"}
+    "&desk_right": {t: "Desk →", s: "mobile last app"}
     "&os_comment": {t: Comment, s: "Cmd/Ctrl /"}
     "&os_grave": "`"
     "&os_equal": "="

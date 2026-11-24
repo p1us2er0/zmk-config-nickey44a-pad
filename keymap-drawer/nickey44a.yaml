@@ -225,6 +225,51 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
+  ANDROID:
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - ''
+  - ''
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
   NUM:
   - {t: ▽, type: trans}
   - '1'
@@ -279,7 +324,7 @@ layers:
   - Boot
   - {t: BT0 Mac, s: 2x kbd only}
   - BT1 iPad
-  - BT2 iPad
+  - BT2 Android
   - {t: BT3 Win, s: 2x kbd only}
   - {t: BT4 Win JIS, s: 2x kbd only}
   - {type: held}
@@ -343,8 +388,8 @@ layers:
   - {t: ▽, type: trans}
   - LEFT SHIFT
   - ''
-  - {t: Desk ←, s: iPad Home}
-  - {t: Desk →, s: iPad last app}
+  - {t: Desk ←, s: mobile Home}
+  - {t: Desk →, s: mobile last app}
   - ''
   - ''
   - ''
@@ -416,13 +461,13 @@ combos:
   k: Ctl+SPACE
 - p: [15, 16]
   k: {t: Comment, s: Cmd/Ctrl /}
-  l: [MAC, WIN, WIN_JIS, IPAD, NUM]
+  l: [MAC, WIN, WIN_JIS, IPAD, ANDROID, NUM]
 - p: [19, 20]
   k: '`'
-  l: [MAC, WIN, WIN_JIS, IPAD, NUM]
+  l: [MAC, WIN, WIN_JIS, IPAD, ANDROID, NUM]
 - p: [18, 19]
   k: '='
-  l: [MAC, WIN, WIN_JIS, IPAD, NUM]
+  l: [MAC, WIN, WIN_JIS, IPAD, ANDROID, NUM]
 - p: [25, 26]
   k: Gui+LEFT ARROW
   l: [MAC, IPAD]
@@ -431,7 +476,7 @@ combos:
   l: [MAC, IPAD]
 - p: [25, 26]
   k: Alt+LEFT ARROW
-  l: [WIN, WIN_JIS]
+  l: [WIN, WIN_JIS, ANDROID]
 - p: [26, 27]
   k: Alt+RIGHT ARROW
-  l: [WIN, WIN_JIS]
+  l: [WIN, WIN_JIS, ANDROID]

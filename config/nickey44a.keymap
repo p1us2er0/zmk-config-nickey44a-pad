@@ -18,19 +18,22 @@
  * Layer numbers differ from tomkey. nickey44a_r.overlay refers to layers
  * by number, so keep these in step with it: MOUSE_SLOW (1) slows the right
  * trackpad, turns its two-finger left/right swipes into Back/Forward and
- * its two-finger tap into the zoom reset,
- * WIN (2) and IPAD (4) pick the host's swipe keys, NUM (5)
- * turns the right pad's swipes into the app switcher,
- * and touching the pad enters AUTO_MOUSE (8). The rgbled colors in
- * nickey44a_r.conf are per layer number too.
+ * its two-finger tap into the zoom reset, WIN (2), IPAD (4) and ANDROID (5)
+ * pick the host's swipe keys, NUM (6) turns the right pad's swipes into the
+ * app switcher, and touching the pad enters AUTO_MOUSE (9). The rgbled
+ * colors in nickey44a_r.conf are per layer number too.
  *
- * WIN, WIN_JIS and IPAD are host flags, set by the Bluetooth profile keys
- * on FUNCTION, and at startup for the saved profile by profile_layers below
- * (src/profile_layers.c). WIN is on for both Windows profiles; WIN_JIS is
- * on as well for the JIS one and only holds the keys whose symbols move on
- * JIS. They sit below NUM so that NUM's keys win over the WIN_JIS keys, and
- * keys that differ by host choose their binding with layer morphs
- * (zmk,behavior-layer-morph) instead of separate layers.
+ * WIN, WIN_JIS, IPAD and ANDROID are host flags, set by the Bluetooth
+ * profile keys on FUNCTION, and at startup for the saved profile by
+ * profile_layers below (src/profile_layers.c). WIN is on for both Windows
+ * profiles and for Android, whose shortcuts use Ctrl as on Windows. WIN_JIS
+ * is on as well for the JIS Windows and only holds the keys whose symbols
+ * move on JIS; ANDROID is on as well for Android and picks the few keys that
+ * differ from Windows. The flags sit below NUM so that NUM's keys win over
+ * the WIN_JIS keys, and keys that differ by host choose their binding with
+ * layer morphs (zmk,behavior-layer-morph) instead of separate layers. The
+ * combos with a layer list name every host flag: ZMK checks a combo's
+ * layers against the highest active layer only.
  */
 
 #include <behaviors.dtsi>
@@ -44,10 +47,11 @@
 #define LAYER_WIN 2
 #define LAYER_WIN_JIS 3
 #define LAYER_IPAD 4
-#define LAYER_NUM 5
-#define LAYER_FUNCTION 6
-#define LAYER_MOUSE 7
-#define LAYER_AUTO_MOUSE 8
+#define LAYER_ANDROID 5
+#define LAYER_NUM 6
+#define LAYER_FUNCTION 7
+#define LAYER_MOUSE 8
+#define LAYER_AUTO_MOUSE 9
 
 #define ZKHK_JIS                  GRAVE                  // Zenkaku ↔ Hankaku ↔ Kanji (半角 ↔ 全角 ↔ 漢字)
 #define MINUS_JIS                 MINUS                  // -
@@ -140,19 +144,19 @@
         comment {
             bindings = <&os_comment>;
             key-positions = <15 16>;
-            layers = <LAYER_MAC LAYER_WIN LAYER_WIN_JIS LAYER_IPAD LAYER_NUM>;
+            layers = <LAYER_MAC LAYER_WIN LAYER_WIN_JIS LAYER_IPAD LAYER_ANDROID LAYER_NUM>;
         };
 
         back_quote {
             bindings = <&os_grave>;
             key-positions = <19 20>;
-            layers = <LAYER_MAC LAYER_WIN LAYER_WIN_JIS LAYER_IPAD LAYER_NUM>;
+            layers = <LAYER_MAC LAYER_WIN LAYER_WIN_JIS LAYER_IPAD LAYER_ANDROID LAYER_NUM>;
         };
 
         equal {
             bindings = <&os_equal>;
             key-positions = <18 19>;
-            layers = <LAYER_MAC LAYER_WIN LAYER_WIN_JIS LAYER_IPAD LAYER_NUM>;
+            layers = <LAYER_MAC LAYER_WIN LAYER_WIN_JIS LAYER_IPAD LAYER_ANDROID LAYER_NUM>;
         };
 
         back {
@@ -170,13 +174,13 @@
         back_win {
             bindings = <&kp LA(LEFT_ARROW)>;
             key-positions = <25 26>;
-            layers = <LAYER_WIN LAYER_WIN_JIS>;
+            layers = <LAYER_WIN LAYER_WIN_JIS LAYER_ANDROID>;
         };
 
         next_win {
             bindings = <&kp LA(RIGHT_ARROW)>;
             key-positions = <26 27>;
-            layers = <LAYER_WIN LAYER_WIN_JIS>;
+            layers = <LAYER_WIN LAYER_WIN_JIS LAYER_ANDROID>;
         };
     };
 
@@ -186,16 +190,16 @@
     // event when the active profile is selected again.
     profile_layers {
         compatible = "zmk,profile-layers";
-        layers = <LAYER_WIN LAYER_WIN_JIS LAYER_IPAD>;
+        layers = <LAYER_WIN LAYER_WIN_JIS LAYER_IPAD LAYER_ANDROID>;
 
-        ipad_1 {
+        ipad {
             profile = <1>;
             layers = <LAYER_IPAD>;
         };
 
-        ipad_2 {
+        android {
             profile = <2>;
-            layers = <LAYER_IPAD>;
+            layers = <LAYER_WIN LAYER_ANDROID>;
         };
 
         windows {
@@ -267,7 +271,7 @@
             label = "BT_WIN_JIS_KBD";
         };
 
-        // The iPad has no monitor to hand over, so no F18/F19.
+        // The iPad and Android have no monitor to hand over, so no F18/F19.
         bt_ipad: bt_ipad {
             compatible = "zmk,behavior-macro-one-param";
             #binding-cells = <1>;
@@ -275,24 +279,31 @@
             label = "BT_IPAD";
         };
 
+        bt_android: bt_android {
+            compatible = "zmk,behavior-macro-one-param";
+            #binding-cells = <1>;
+            bindings = <&android &macro_param_1to2 &bt BT_SEL MACRO_PLACEHOLDER>;
+            label = "BT_ANDROID";
+        };
+
         mac_us: mac_us {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&tog_off LAYER_WIN &tog_off LAYER_WIN_JIS &tog_off LAYER_IPAD>;
+            bindings = <&tog_off LAYER_WIN &tog_off LAYER_WIN_JIS &tog_off LAYER_IPAD &tog_off LAYER_ANDROID>;
             label = "MAC_US";
         };
 
         win_us: win_us {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&tog_on LAYER_WIN &tog_off LAYER_WIN_JIS &tog_off LAYER_IPAD>;
+            bindings = <&tog_on LAYER_WIN &tog_off LAYER_WIN_JIS &tog_off LAYER_IPAD &tog_off LAYER_ANDROID>;
             label = "WIN_US";
         };
 
         win_jis: win_jis {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&tog_on LAYER_WIN &tog_on LAYER_WIN_JIS &tog_off LAYER_IPAD>;
+            bindings = <&tog_on LAYER_WIN &tog_on LAYER_WIN_JIS &tog_off LAYER_IPAD &tog_off LAYER_ANDROID>;
             label = "WIN_JIS";
         };
 
@@ -300,8 +311,18 @@
         ipad: ipad {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&tog_off LAYER_WIN &tog_off LAYER_WIN_JIS &tog_on LAYER_IPAD>;
+            bindings = <&tog_off LAYER_WIN &tog_off LAYER_WIN_JIS &tog_on LAYER_IPAD &tog_off LAYER_ANDROID>;
             label = "IPAD";
+        };
+
+        // Android takes the Windows keys: its shortcuts use Ctrl, and the
+        // key in Ctrl's place on the Mac is Meta (Win). ANDROID picks the
+        // few keys that differ from Windows.
+        android: android {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&tog_on LAYER_WIN &tog_off LAYER_WIN_JIS &tog_off LAYER_IPAD &tog_on LAYER_ANDROID>;
+            label = "ANDROID";
         };
     };
 
@@ -489,19 +510,29 @@
             layers = <LAYER_WIN>;
         };
 
-        // The iPad has no desktops: C goes to the Home Screen, V to the last app.
+        // The iPad and Android have no desktops: C goes to the Home Screen
+        // (Cmd+H on the iPad, Meta+H on Android), V to the last app.
         desk_left: desk_left {
             compatible = "zmk,behavior-layer-morph";
             #binding-cells = <0>;
             bindings = <&desk_left_mw>, <&kp LG(H)>;
-            layers = <LAYER_IPAD>;
+            layers = <LAYER_IPAD LAYER_ANDROID>;
         };
 
         desk_right: desk_right {
             compatible = "zmk,behavior-layer-morph";
             #binding-cells = <0>;
-            bindings = <&desk_right_mw>, <&kp LG(TAB)>;
-            layers = <LAYER_IPAD>;
+            bindings = <&desk_right_mw>, <&last_app>;
+            layers = <LAYER_IPAD LAYER_ANDROID>;
+        };
+
+        // The last app: Cmd+Tab on the iPad, Alt+Tab on Android (on tablets
+        // from Android 14, as on Windows).
+        last_app: last_app {
+            compatible = "zmk,behavior-layer-morph";
+            #binding-cells = <0>;
+            bindings = <&kp LG(TAB)>, <&kp LA(TAB)>;
+            layers = <LAYER_ANDROID>;
         };
 
         // Combos: comment out (Cmd+/ or Ctrl+/), ` and =.
@@ -655,10 +686,23 @@
             >;
         };
 
-        // Layer 4. Only a flag for the iPads (BT1, BT2), like WIN for Windows:
+        // Layer 4. Only a flag for the iPad (BT1), like WIN for Windows:
         // nickey44a_r.overlay and the MOUSE keys C and V check it. Set with
         // the other host flags (profile_layers and the profile keys).
         IPAD {
+            bindings = <
+&trans  &trans  &trans  &trans  &trans  &trans                    &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans                    &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &none     &none   &trans  &trans  &trans  &trans  &trans  &trans
+                                &trans  &trans  &trans    &trans  &trans  &trans
+            >;
+        };
+
+        // Layer 5. Only a flag for Android (BT2), on together with WIN, as
+        // WIN_JIS is for the JIS Windows: Android takes the Windows keys, and
+        // nickey44a_r.overlay and the MOUSE keys C and V check this flag for
+        // the few that differ.
+        ANDROID {
             bindings = <
 &trans  &trans  &trans  &trans  &trans  &trans                    &trans  &trans  &trans  &trans  &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans                    &trans  &trans  &trans  &trans  &trans  &trans
@@ -678,9 +722,9 @@
 
         FUNCTION {
             bindings = <
-&soft_off_hold  &ind_bat  &trans   &trans  &sys_reset  &bootloader                                    &td_bt_mac_0  &bt_ipad 1     &bt_ipad 2  &td_bt_win_3  &td_bt_win_jis_4  &trans
-&trans          &kp F1    &kp F2   &kp F3  &kp F4      &kp F5                                         &kp F6        &kp F7         &kp F8      &kp F9        &kp F10           &trans
-&trans          &kp F11   &kp F12  &trans  &trans      &kp LG(LS(S))  &none                   &none   &bootloader   &sys_reset     &mac_us     &win_us       &win_jis          &bt BT_CLR
+&soft_off_hold  &ind_bat  &trans   &trans  &sys_reset  &bootloader                                    &td_bt_mac_0  &bt_ipad 1     &bt_android 2  &td_bt_win_3  &td_bt_win_jis_4  &trans
+&trans          &kp F1    &kp F2   &kp F3  &kp F4      &kp F5                                         &kp F6        &kp F7         &kp F8         &kp F9        &kp F10           &trans
+&trans          &kp F11   &kp F12  &trans  &trans      &kp LG(LS(S))  &none                   &none   &bootloader   &sys_reset     &mac_us        &win_us       &win_jis          &bt BT_CLR
                                            &trans      &trans         &kp LG(LS(NUMBER_4))    &trans  &trans        &trans
             >;
         };
