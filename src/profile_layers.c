@@ -10,8 +10,7 @@
  * zmk,profile-layers node in config/nickey44a.keymap lists the layers.
  *
  * ZMK also raises the profile event when the active profile connects or
- * disconnects. Those leave the layers alone, so a host chosen by hand on
- * FUNCTION (&mac_us and the others) stays until the next profile change.
+ * disconnects. Those leave the layers alone.
  */
 
 #define DT_DRV_COMPAT zmk_profile_layers

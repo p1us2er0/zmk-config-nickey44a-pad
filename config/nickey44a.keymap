@@ -11,7 +11,11 @@
  *   tomkey inner '                     -> right home row, pinky (22)
  *   tomkey bottom right Del            -> right bottom row, pinky (36)
  *   tomkey pinky F2 / F7               -> right outer column middle / bottom (23 / 37)
- *                                         (FUNCTION keeps F10 and &win_jis in place)
+ *
+ * FUNCTION has the F keys on the left (F1-F5 on the home row, F6-F10
+ * below, F11 / F12 above) and the Bluetooth profiles on the right: the
+ * first host of each kind on the top row, the second Mac and iPad below
+ * the first.
  *   tomkey inner Ctrl+Space            -> combo F + G
  *   tomkey combo ' + H for `           -> J + K
  *
@@ -192,8 +196,13 @@
         compatible = "zmk,profile-layers";
         layers = <LAYER_WIN LAYER_WIN_JIS LAYER_IPAD LAYER_ANDROID>;
 
-        ipad {
+        ipad_1 {
             profile = <1>;
+            layers = <LAYER_IPAD>;
+        };
+
+        ipad_2 {
+            profile = <6>;
             layers = <LAYER_IPAD>;
         };
 
@@ -722,9 +731,9 @@
 
         FUNCTION {
             bindings = <
-&soft_off_hold  &ind_bat  &trans   &trans  &sys_reset  &bootloader                                    &td_bt_mac_0  &bt_ipad 1     &bt_android 2  &td_bt_win_3  &td_bt_win_jis_4  &trans
-&trans          &kp F1    &kp F2   &kp F3  &kp F4      &kp F5                                         &kp F6        &kp F7         &kp F8         &kp F9        &kp F10           &trans
-&trans          &kp F11   &kp F12  &trans  &trans      &kp LG(LS(S))  &none                   &none   &bootloader   &sys_reset     &mac_us        &win_us       &win_jis          &bt BT_CLR
+&soft_off_hold  &ind_bat  &kp F11  &kp F12  &sys_reset  &bootloader                                   &td_bt_mac_0   &bt_ipad 1     &bt_android 2  &td_bt_win_3  &td_bt_win_jis_4  &trans
+&trans          &kp F1    &kp F2   &kp F3   &kp F4      &kp F5                                        &bt_mac_kbd 5  &bt_ipad 6     &trans         &trans        &trans            &trans
+&kp LG(LS(S))   &kp F6    &kp F7   &kp F8   &kp F9      &kp F10       &none                   &none   &bootloader    &sys_reset     &trans         &trans        &trans            &bt BT_CLR
                                            &trans      &trans         &kp LG(LS(NUMBER_4))    &trans  &trans        &trans
             >;
         };
